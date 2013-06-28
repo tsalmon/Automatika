@@ -6,12 +6,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class Automatika
 {
-
+    
     /* variable générales d'affichage */
     static  volatile Automatika instance  = null;
-    static           int        fenetre_x = 779;
-    static           int        fenetre_y = 456;
-    private          Fenetre f;
+    static           int        window_x = 779;
+    static           int        window_y = 456;
+    private          Windows f;
     
     //permet d'utiliser les variables et les fonctions de la classe Automatika 
     public final static Automatika getInstance()
@@ -31,12 +31,12 @@ public class Automatika
         super();
     }
     
-    public Fenetre getFen()
+    public Windows getWin()
     {
         return (this.f);
     }
 
-    public void setFen(Fenetre newf)
+    public void setWin(Windows newf)
     {
         this.f = newf;
     }
@@ -60,8 +60,8 @@ public class Automatika
                     catch(Exception e){
                         e.printStackTrace();
                     }
-                    Automatika.getInstance().setFen(new Fenetre());
-                    Automatika.getInstance().getFen().setContentPane(new Menu("Automatika - Menu"));
+                    Automatika.getInstance().setWin(new Windows());
+                    Automatika.getInstance().getWin().setContentPane(new Menu("Automatika - Menu"));
                 }
             });
     }    

@@ -15,50 +15,50 @@ import java.io.*;
 
 public class Menu extends JPanel
 {
-    int x              = Automatika.fenetre_x;
-    int y              = Automatika.fenetre_y;
-    JPanel conteneur   = new JPanel();
-    Bouton automate    = new Bouton("Automate");
-    Bouton liste       = new Bouton("Liste");
-    Bouton ouvrir      = new Bouton("Ouvrir");
-
+    int x              = Automatika.window_x;
+    int y              = Automatika.window_y;
+    JPanel contain     = new JPanel();
+    Bouton automaton   = new Bouton("Automaton");
+    Bouton lit         = new Bouton("List");
+    Bouton open        = new Bouton("Open");
+    
     Menu(String titre)
     {
 	setSize(x, y);
 	conteneur.setLayout(new GridLayout(1, 3, 10, 0 ));
-	conteneur.add(automate);
-	conteneur.add(liste);
-	conteneur.add(ouvrir);
-        add(conteneur);
+	conteneur.add(automaton);
+	conteneur.add(list);
+	conteneur.add(open);
+        add(contain);
 	setVisible(true);
     }
     
-    class Bouton extends JButton implements MouseListener
+    class Button extends JButton implements MouseListener
     {
-	public Bouton(String s)
+	public Button(String s)
 	{
 	    super(s);
-	    JLabel texte = new JLabel(s);
+	    JLabel text = new JLabel(s);
 	    //texte.setFont(new Font("Verdana", Font.PLAIN, 8));                                          
 	    //texte.setForeground(new Color(30,30,60));                                                   
-	    JPanel textepan = new JPanel();
-	    textepan.add(texte);
-	    textepan.setOpaque(false);
-	    add(textepan);
+	    JPanel textpan = new JPanel();
+	    textpan.add(text);
+	    textpan.setOpaque(false);
+	    add(textpan);
 	    this.addMouseListener(this);
 	}
 
 	public void mouseClicked(MouseEvent e)
 	{
-	    if(e.getSource() == automate)
+	    if(e.getSource() == automaton)
 		{
-		    System.out.println("automate");
+		    System.out.println("automaton");
 		}
-	    if(e.getSource() == liste)
+	    if(e.getSource() == list)
 		{
-		    System.out.println("liste");
+		    System.out.println("list");
 		}
-	    if(e.getSource() == ouvrir)
+	    if(e.getSource() == open)
 		{
 		    try{
 			JFileChooser dialogue = new JFileChooser(".");
@@ -75,7 +75,8 @@ public class Menu extends JPanel
 		    }
 		}
 	}
-		public void mouseEntered(MouseEvent e){}
+	
+	public void mouseEntered(MouseEvent e){}
         public void mouseExited(MouseEvent e){}
         public void mousePressed(MouseEvent e){}
         public void mouseReleased(MouseEvent e){}
