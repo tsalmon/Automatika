@@ -44,7 +44,6 @@ public class Automatika
 
     public static void main(String[] args)
     {
-        System.out.println("ok");
         javax.swing.SwingUtilities.invokeLater(new Runnable()
             {
                 public void run()

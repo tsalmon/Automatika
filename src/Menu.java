@@ -10,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
+import javax.swing.JFileChooser;
+import java.io.*;
 
 public class Menu extends JPanel
 {
@@ -23,7 +25,7 @@ public class Menu extends JPanel
     Menu(String titre)
     {
 	setSize(x, y);
-	conteneur.setLayout(new GridLayout(3, 1, 10, 15));
+	conteneur.setLayout(new GridLayout(1, 3, 10, 0 ));
 	conteneur.add(automate);
 	conteneur.add(liste);
 	conteneur.add(ouvrir);
@@ -47,10 +49,33 @@ public class Menu extends JPanel
 	}
 
 	public void mouseClicked(MouseEvent e)
-        {
-	    
-        }
-	public void mouseEntered(MouseEvent e){}
+	{
+	    if(e.getSource() == automate)
+		{
+		    System.out.println("automate");
+		}
+	    if(e.getSource() == liste)
+		{
+		    System.out.println("liste");
+		}
+	    if(e.getSource() == ouvrir)
+		{
+		    try{
+			JFileChooser dialogue = new JFileChooser(".");
+			PrintWriter sortie;
+			File fichier;
+			if (dialogue.showOpenDialog(null) ==  JFileChooser.APPROVE_OPTION) {
+			    fichier = dialogue.getSelectedFile();
+			    sortie = new PrintWriter(new FileWriter(fichier.getPath(), true));
+			    sortie.println("a");
+			    sortie.close();
+			}
+		    }
+		    catch(IOException ex){
+		    }
+		}
+	}
+		public void mouseEntered(MouseEvent e){}
         public void mouseExited(MouseEvent e){}
         public void mousePressed(MouseEvent e){}
         public void mouseReleased(MouseEvent e){}
