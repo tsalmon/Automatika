@@ -18,17 +18,17 @@ public class Menu extends JPanel
     int x              = Automatika.window_x;
     int y              = Automatika.window_y;
     JPanel contain     = new JPanel();
-    Bouton automaton   = new Bouton("Automaton");
-    Bouton lit         = new Bouton("List");
-    Bouton open        = new Bouton("Open");
+    Button automaton   = new Button("Automaton");
+    Button list         = new Button("List");
+    Button open        = new Button("Open");
     
     Menu(String titre)
     {
 	setSize(x, y);
-	conteneur.setLayout(new GridLayout(1, 3, 10, 0 ));
-	conteneur.add(automaton);
-	conteneur.add(list);
-	conteneur.add(open);
+	contain.setLayout(new GridLayout(1, 3, 10, 0 ));
+	contain.add(automaton);
+	contain.add(list);
+	contain.add(open);
         add(contain);
 	setVisible(true);
     }
