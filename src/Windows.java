@@ -4,8 +4,8 @@ import java.awt.*;
 //this file contain program window
 public class Windows extends JFrame
 {
-    int size_x = Automatika.window_x ;
-    int size_y = Automatika.window_y ;
+    int size_x = Main.window_x ;
+    int size_y = Main.window_y ;
     
     Windows()
     {
@@ -17,12 +17,3 @@ public class Windows extends JFrame
         setVisible(true);
     }
 }
-
-
-
-
-
-
-
-
-

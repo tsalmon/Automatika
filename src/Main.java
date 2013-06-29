@@ -4,29 +4,29 @@ import java.util.*;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class Automatika
+public class Main
 {
     
     /* variable générales d'affichage */
-    static  volatile Automatika instance  = null;
+    static  volatile Main instance  = null;
     static           int        window_x = 779;
     static           int        window_y = 456;
     private          Windows f;
     
-    //permet d'utiliser les variables et les fonctions de la classe Automatika 
-    public final static Automatika getInstance()
+    //permet d'utiliser les variables et les fonctions de la classe Main 
+    public final static Main getInstance()
     {
-        if(Automatika.instance == null){
-            synchronized(Automatika.class){
-                if(Automatika.instance == null){
-                    Automatika.instance = new Automatika();
+        if(Main.instance == null){
+            synchronized(Main.class){
+                if(Main.instance == null){
+                    Main.instance = new Main();
                 }
             }
         }
-        return (Automatika.instance);
+        return (Main.instance);
     }
     
-    private Automatika()
+    private Main()
     {
         super();
     }
@@ -60,8 +60,8 @@ public class Automatika
                     catch(Exception e){
                         e.printStackTrace();
                     }
-                    Automatika.getInstance().setWin(new Windows());
-                    Automatika.getInstance().getWin().setContentPane(new Menu("Automatika - Menu"));
+                    Main.getInstance().setWin(new Windows());
+                    Main.getInstance().getWin().setContentPane(new Menu("Automatika - Menu"));
                 }
             });
     }    

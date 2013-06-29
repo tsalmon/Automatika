@@ -15,8 +15,8 @@ import java.io.*;
 
 public class Menu extends JPanel
 {
-    int x              = Automatika.window_x;
-    int y              = Automatika.window_y;
+    int x              = Main.window_x;
+    int y              = Main.window_y;
     JPanel contain     = new JPanel();
     Button automaton   = new Button("Automaton");
     Button list         = new Button("List");
@@ -53,10 +53,12 @@ public class Menu extends JPanel
 	    if(e.getSource() == automaton)
 		{
 		    System.out.println("automaton");
+		    Main.getInstance().getWin().getContentPane().add(new Automaton());
+		    
 		}
 	    if(e.getSource() == list)
 		{
-		    System.out.println("list");
+		    Main.getInstance().getWin().setContentPane(new Automatika(1));
 		}
 	    if(e.getSource() == open)
 		{
@@ -67,11 +69,13 @@ public class Menu extends JPanel
 			if (dialogue.showOpenDialog(null) ==  JFileChooser.APPROVE_OPTION) {
 			    fichier = dialogue.getSelectedFile();
 			    sortie = new PrintWriter(new FileWriter(fichier.getPath(), true));
-			    sortie.println("a");
+			    //sortie.println("a");
 			    sortie.close();
 			}
+			Main.getInstance().getWin().setContentPane(new Automatika(2));
 		    }
 		    catch(IOException ex){
+			ex.printStackTrace();
 		    }
 		}
 	}
