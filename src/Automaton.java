@@ -7,13 +7,13 @@ import java.util.*;
 
 public class Automaton extends JPanel implements MouseListener, KeyListener
 {
-    Graphics g = this.getGraphics();
     JPanel draw_surface = new JPanel();
+    //Graphics g = .getGraphics();
+
     static boolean move = true;
     int trait_x = -1;
     int trait_y = -1;
-    LinkedList<Integer> coord = new LinkedList<Integer>();
-    LinkedList<String[]> traits = new LinkedList<String[]>();
+    LinkedList<Node> coord = new LinkedList<Node>();
     //private Panneau pan;
     public Automaton()
     {
@@ -21,9 +21,6 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 	setLayout(new BorderLayout());
 	add("North", new JButton("Lol"));
 	add("Center", draw_surface);
-	//pan = new Panneau(100, 100);
-	//getContentPane().add(pan);
-	
 	draw_surface.addMouseListener(this);
 	draw_surface.addKeyListener(this);
 	setVisible(true);
@@ -39,10 +36,10 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 	boolean go = true;
 	for(int i = 0; i < coord.size(); i+=2)
 	    {
-		if( y >= coord.get(i+1) - 25 && 
-		    y <= coord.get(i+1) + 25 && 
-		    x >= coord.get(i) - 25 && 
-		    x <= coord.get(i) + 25)
+		if( y >= coord.get(i).y - 25 && 
+		    y <= coord.get(i).y + 25 && 
+		    x >= coord.get(i).x - 25 && 
+		    x <= coord.get(i).x + 25)
 		    {
 			go = false;
 		    }
@@ -50,9 +47,8 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 	if(go)
 	    {
 		draw_surface.getGraphics().drawOval(x-25, y-25, 50, 50);
-		draw_surface.getGraphics().drawString("q" + coord.size()/2, x-5, y+5);
-		coord.add(x);
-		coord.add(y);
+		draw_surface.getGraphics().drawString("q" + coord.size(), x-5, y+5);
+		coord.add(new Node(x,y, "q"+coord.size()));
 	    }
     }
 
@@ -60,13 +56,21 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
     {
 	for(int i = 0; i < coord.size(); i+=2)
 	    {
-		if( y >= coord.get(i+1) - 25 && 
-		    y <= coord.get(i+1) + 25 && 
-		    x >= coord.get(i) - 25 && 
-		    x <= coord.get(i) + 25)
+		if( y >= coord.get(i).y - 25 && 
+		    y <= coord.get(i).y + 25 && 
+		    x >= coord.get(i).x - 25 && 
+		    x <= coord.get(i).x + 25)
 		    {
+			draw_surface.getGraphics().setColor(Color.red);
 			System.out.println("new trait: ok");
-			draw_surface.getGraphics().drawLine(trait_x, trait_y, coord.get(i), coord.get(i+1));
+			draw_surface.getGraphics().drawLine(trait_x, trait_y, coord.get(i).x, coord.get(i).y);
+			Graphics g = draw_surface.getGraphics();
+			g.setColor(draw_surface.getBackground());
+			g.fillOval(trait_x-25, trait_y-25, 50, 50);
+			g.fillOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
+			g.setColor(Color.black);
+			draw_surface.getGraphics().drawString("q" + coord.size(), x-5, y+5);
+			
 			return;
 		    }
 		else
@@ -84,13 +88,13 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
     {
 	for(int i = 0; i < coord.size(); i+=2)
 	    {
-		if( e.getY() >= coord.get(i+1) - 25 && 
-		    e.getY() <= coord.get(i+1) + 25 && 
-		    e.getX() >= coord.get(i) - 25 && 
-		    e.getX() <= coord.get(i) + 25)
+		if( e.getY() >= coord.get(i).y - 25 && 
+		    e.getY() <= coord.get(i).y + 25 && 
+		    e.getX() >= coord.get(i).x - 25 && 
+		    e.getX() <= coord.get(i).x + 25)
 		    {
-			trait_x = coord.get(i);
-			trait_y = coord.get(i+1);
+			trait_x = coord.get(i).x;
+			trait_y = coord.get(i+1).y;
 			System.out.println(trait_x + " " + trait_y);
 			return ;
 		    }
