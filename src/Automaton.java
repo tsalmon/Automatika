@@ -17,18 +17,18 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
     //private Panneau pan;
     public Automaton()
     {
-	setSize(779, 456);
+	setSize(Main.window_x, Main.window_x);
 	setLayout(new BorderLayout());
 	add("North", new JButton("Lol"));
 	add("Center", draw_surface);
 	//pan = new Panneau(100, 100);
 	//getContentPane().add(pan);
-       
+	
 	draw_surface.addMouseListener(this);
 	draw_surface.addKeyListener(this);
 	setVisible(true);
     }
-
+    
     public void mouseClicked(MouseEvent e)
     {
 	newNode(e.getX(), e.getY());
@@ -65,7 +65,13 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 		    x >= coord.get(i) - 25 && 
 		    x <= coord.get(i) + 25)
 		    {
+			System.out.println("new trait: ok");
 			draw_surface.getGraphics().drawLine(trait_x, trait_y, coord.get(i), coord.get(i+1));
+			return;
+		    }
+		else
+		    {
+			System.out.println("new trait : fail");
 		    }
 	    }
 	trait_x = -1;
@@ -85,15 +91,25 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 		    {
 			trait_x = coord.get(i);
 			trait_y = coord.get(i+1);
+			System.out.println(trait_x + " " + trait_y);
+			return ;
 		    }
 	    }
     }
     public void mouseReleased(MouseEvent e)
     {
-	if(e.getX() < 0 || e.getY() < 0 || e.getX() >= 500 || e.getY() >= 300)
-	    return;
+	if(e.getX() < 0 || e.getY() < 0 || e.getX() >= Main.window_x || e.getY() >= Main.window_y)
+	    {
+		System.out.println("OUT OF THE SCREEN");
+		System.out.println("e.getX() < 0 : "+ (e.getX() < 0) +"\n" + 
+				   "e.getY() < 0 : " + (e.getY() < 0)+ "\n" + 
+				   "e.getX() >= 500 : " + (e.getX() >= Main.window_x) + "\n" + 
+				   "e.getY() >= 300 : " + ( e.getY() >= Main.window_y));
+		return;
+	    }
 	if(trait_x > -1)
 	    {
+		System.out.println("trait released : ok");
 		newTrait(e.getX(), e.getY());
 	    }
 	else
