@@ -1,5 +1,5 @@
 import javax.swing.*;
-//import java.awt.*;
+import java.awt.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
@@ -8,6 +8,7 @@ import java.util.*;
 public class Automaton extends JPanel implements MouseListener, KeyListener
 {
     Graphics g = this.getGraphics();
+    JPanel draw_surface = new JPanel();
     static boolean move = true;
     int trait_x = -1;
     int trait_y = -1;
@@ -17,17 +18,19 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
     public Automaton()
     {
 	setSize(779, 456);
+	setLayout(new BorderLayout());
+	add("North", new JButton("Lol"));
+	add("Center", draw_surface);
 	//pan = new Panneau(100, 100);
 	//getContentPane().add(pan);
        
-	this.addMouseListener(this);
-	this.addKeyListener(this);
+	draw_surface.addMouseListener(this);
+	draw_surface.addKeyListener(this);
 	setVisible(true);
     }
 
     public void mouseClicked(MouseEvent e)
     {
-	System.out.println("click");
 	newNode(e.getX(), e.getY());
     }
 
@@ -46,8 +49,8 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 	    }
 	if(go)
 	    {
-		getGraphics().drawOval(x-25, y-25, 50, 50);
-		getGraphics().drawString("q" + coord.size()/2, x-5, y+5);
+		draw_surface.getGraphics().drawOval(x-25, y-25, 50, 50);
+		draw_surface.getGraphics().drawString("q" + coord.size()/2, x-5, y+5);
 		coord.add(x);
 		coord.add(y);
 	    }
@@ -62,7 +65,7 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 		    x >= coord.get(i) - 25 && 
 		    x <= coord.get(i) + 25)
 		    {
-			this.getGraphics().drawLine(trait_x, trait_y, coord.get(i), coord.get(i+1));
+			draw_surface.getGraphics().drawLine(trait_x, trait_y, coord.get(i), coord.get(i+1));
 		    }
 	    }
 	trait_x = -1;
