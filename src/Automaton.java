@@ -8,24 +8,24 @@ import java.util.*;
 public class Automaton extends JPanel implements MouseListener, KeyListener
 {
     JPanel draw_surface = new JPanel();
-    //Graphics g = .getGraphics();
-
-    static boolean move = true;
+    JButton save_button = new JButton("save");    
+    static boolean move = false;
     Node trait_origin = null;
     LinkedList<Node> coord = new LinkedList<Node>();
     //private Panneau pan;
     public Automaton()
     {
+	JPanel header = new JPanel();
+	header.add(save_button);
 	setSize(Main.window_x, Main.window_x);
 	setLayout(new BorderLayout());
-	add("North", new JButton("Lol"));
+	add("North", header);
 	add("Center", draw_surface);
 	draw_surface.addMouseListener(this);
 	draw_surface.addKeyListener(this);
 	setVisible(true);
     }
     
-
     public void newNode(int x, int y)
     {
 	boolean go = true;
@@ -59,7 +59,7 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 		    x <= coord.get(i).x + 25)
 		    {
 			draw_surface.getGraphics().setColor(Color.red);
-			System.out.println("new trait: ok");
+			//System.out.println("new trait: ok");
 			draw_surface.getGraphics().drawLine(trait_origin.x, trait_origin.y, coord.get(i).x, coord.get(i).y);
 			Graphics g = draw_surface.getGraphics();
 			g.setColor(draw_surface.getBackground());
@@ -70,16 +70,26 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 			g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
 			draw_surface.getGraphics().drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);
 			draw_surface.getGraphics().drawString(trait_origin.name, trait_origin.x-5, trait_origin.y+5);
+			trait_origin.add_transition(coord.get(i));
+			coord.get(i).add_transition(trait_origin);
+			System.out.println(coord.get(i).print_transitions());
+			System.out.println(trait_origin.print_transitions());
 			return;
 		    }
 		else
 		    {
-			System.out.println("new trait : fail");
+			//System.out.println("new trait : fail");
 		    }
 	    }
     }
     //Pressed => Released
-    public void mouseClicked(MouseEvent e){}
+    public void mouseClicked(MouseEvent e)
+    {
+	if(e.getSource() == save_button)
+	    {
+
+	    }
+    }
     public void mouseEntered(MouseEvent e){}
     public void mouseExited(MouseEvent e){}
     public void mousePressed(MouseEvent e)
