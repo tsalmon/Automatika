@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 //this file contain program window
-public class Windows extends JFrame
+public class Windows extends JFrame implements KeyListener
 {
     int size_x = Main.window_x ;
     int size_y = Main.window_y ;
@@ -13,7 +13,7 @@ public class Windows extends JFrame
         setSize(size_x, size_y);
         setLocationRelativeTo(null);
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 }

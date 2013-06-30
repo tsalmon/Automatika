@@ -5,26 +5,37 @@ import java.awt.Graphics;
 import java.awt.event.*;
 import java.util.*;
 
-public class Automaton extends JPanel implements MouseListener, KeyListener
+public class Automaton extends JPanel implements MouseListener,KeyListener
 {
     JPanel draw_surface = new JPanel();
-    JButton save_button = new JButton("save");    
-    static boolean move = false;
+    JButton edit_button = new JButton("Edit");
+    JButton save_button = new JButton("Save");    
+    JButton clean_button = new JButton("Clean");
+    boolean edit = false;
     Node trait_origin = null;
     LinkedList<Node> coord = new LinkedList<Node>();
     //private Panneau pan;
+    
     public Automaton()
     {
-	JPanel header = new JPanel();
-	header.add(save_button);
 	setSize(Main.window_x, Main.window_x);
+	this.setFocusable(true);
+	
+	JPanel header = new JPanel();
+	
+	header.add(edit_button);
+	header.add(save_button);
+	header.add(clean_button);
+	
 	setLayout(new BorderLayout());
 	add("North", header);
 	add("Center", draw_surface);
+	edit_button.addMouseListener(this);
 	draw_surface.addMouseListener(this);
-	draw_surface.addKeyListener(this);
+	addKeyListener(this);
 	setVisible(true);
     }
+
     
     public void newNode(int x, int y)
     {
@@ -82,31 +93,60 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 		    }
 	    }
     }
+    
+    public Node getNode(int x, int y)
+    {
+	for(int i = 0; i < coord.size(); i++)
+	    {
+		if( y >= coord.get(i).y - 25 && 
+		    y <= coord.get(i).y + 25 && 
+		    x >= coord.get(i).x - 25 && 
+		    x <= coord.get(i).x + 25)
+		    {
+			return coord.get(i);
+		    }
+	    }
+	return null;
+    }
+    
     //Pressed => Released
     public void mouseClicked(MouseEvent e)
     {
+	trait_origin = getNode(e.getX(), e.getY());
+	if(e.getClickCount() == 2 && edit == true && trait_origin != null )
+	    {
+		System.out.println("double clicked");
+	    }
+	else
+	    {
+		System.out.println((e.getClickCount() == 2) + " " + (edit == true)  + " " + ( trait_origin != null));
+	    }
+	trait_origin = null;
 	if(e.getSource() == save_button)
 	    {
-
+		System.out.println("TODO: save_button");
+	    }
+	else if(e.getSource() == edit_button)
+	    {
+		edit = (edit) ? false : true;
+		System.out.println("edit = "  + edit);
+	    }
+	else if(e.getSource() == clean_button)
+	    {
+		System.out.println("TODO: clean_button");
 	    }
     }
     public void mouseEntered(MouseEvent e){}
     public void mouseExited(MouseEvent e){}
     public void mousePressed(MouseEvent e)
     {
-	for(int i = 0; i < coord.size(); i++)
+	if(edit == false)
 	    {
-		if( e.getY() >= coord.get(i).y - 25 && 
-		    e.getY() <= coord.get(i).y + 25 && 
-		    e.getX() >= coord.get(i).x - 25 && 
-		    e.getX() <= coord.get(i).x + 25)
-		    {
-			System.out.println("origin pret");
-			trait_origin = coord.get(i);
-			return ;
-		    }
+		System.out.println(e.getX() + " " + e.getY());
+		trait_origin = getNode(e.getX(), e.getY());
 	    }
-    }
+    }    
+    
     public void mouseReleased(MouseEvent e)
     {
 	if(e.getX() < 0 || e.getY() < 0 || e.getX() >= Main.window_x || e.getY() >= Main.window_y)
@@ -121,33 +161,33 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
 	    }
 	if(trait_origin != null)
 	    {
-		System.out.println("trait released : ok");
+		//System.out.println("trait released : ok");
 		newTrait(e.getX(), e.getY());
 		trait_origin = null;
 	    }
 	else
 	    {
-		System.out.println("mouseReleased: nouveau noeud");
+		//System.out.println("mouseReleased: nouveau noeud");
 		newNode(e.getX(), e.getY());
 	    }
-    }
+}
 
-    @Override
-	public void keyPressed(KeyEvent arg0) {
+
+    
+    public void keyPressed(KeyEvent e) {
 	// TODO Auto-generated method stub
-	System.out.println(arg0.getKeyCode());
+	System.out.println(e);
     }
-
-    @Override
-	public void keyReleased(KeyEvent arg0) {
+    
+    public void keyReleased(KeyEvent e) {
 	// TODO Auto-generated method stub
-
+	System.out.println(e);
     }
-
-    @Override
-	public void keyTyped(KeyEvent arg0) {
+    
+    public void keyTyped(KeyEvent e) {
 	// TODO Auto-generated method stub
-
+	System.out.println(e);
     }
+    
 }
 

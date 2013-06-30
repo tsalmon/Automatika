@@ -52,7 +52,7 @@ public class Menu extends JPanel
 	{
 	    if(e.getSource() == automaton)
 		{
-		    System.out.println("automaton");
+		    //System.out.println("automaton");
 		    Main.getInstance().getWin().setContentPane(new Automaton());
 		}
 	    if(e.getSource() == list)
