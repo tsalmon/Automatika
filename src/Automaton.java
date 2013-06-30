@@ -16,11 +16,13 @@ public class Automaton extends JPanel implements MouseListener, KeyListener
     //private Panneau pan;
     public Automaton()
     {
-	System.out.println("f");
+	setSize(779, 456);
 	//pan = new Panneau(100, 100);
 	//getContentPane().add(pan);
+       
 	this.addMouseListener(this);
 	this.addKeyListener(this);
+	setVisible(true);
     }
 
     public void mouseClicked(MouseEvent e)
