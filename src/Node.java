@@ -11,4 +11,8 @@ public class Node
 	y   = b;
 	name = n;
     }
+    public String toString()
+    {
+	return name +" (" + x + ", " + y + ")";
+    }
 }
