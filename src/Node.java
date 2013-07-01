@@ -16,8 +16,7 @@ public class Node
     public void add_transition(Node q)
     {
 	transitions.add(q);
-    }
-    
+    }    
     public String print_transitions()
     {
 	return transitions.toString();
