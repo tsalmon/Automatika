@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 //this file contain program window
-public class Windows extends JFrame implements KeyListener
+public class Windows extends JFrame
 {
     int size_x = Main.window_x ;
     int size_y = Main.window_y ;

@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.*;
 import java.util.*;
 
-public class Automaton extends JPanel implements MouseListener,KeyListener
+public class Automaton extends JPanel implements MouseListener
 {
     JPanel draw_surface = new JPanel();
     JButton edit_button = new JButton("Edit");
@@ -19,7 +19,6 @@ public class Automaton extends JPanel implements MouseListener,KeyListener
     public Automaton()
     {
 	setSize(Main.window_x, Main.window_x);
-	this.setFocusable(true);
 	
 	JPanel header = new JPanel();
 	
@@ -32,7 +31,6 @@ public class Automaton extends JPanel implements MouseListener,KeyListener
 	add("Center", draw_surface);
 	edit_button.addMouseListener(this);
 	draw_surface.addMouseListener(this);
-	addKeyListener(this);
 	setVisible(true);
     }
 
@@ -119,7 +117,7 @@ public class Automaton extends JPanel implements MouseListener,KeyListener
 	    }
 	else
 	    {
-		System.out.println((e.getClickCount() == 2) + " " + (edit == true)  + " " + ( trait_origin != null));
+		//System.out.println((e.getClickCount() == 2) + " " + (edit == true)  + " " + ( trait_origin != null));
 	    }
 	trait_origin = null;
 	if(e.getSource() == save_button)
@@ -149,7 +147,7 @@ public class Automaton extends JPanel implements MouseListener,KeyListener
     
     public void mouseReleased(MouseEvent e)
     {
-	if(e.getX() < 0 || e.getY() < 0 || e.getX() >= Main.window_x || e.getY() >= Main.window_y)
+	if(e.getX() < 50 || e.getY() < 0 || e.getX() >= Main.window_x || e.getY() >= Main.window_y)
 	    {
 		System.out.println("OUT OF THE SCREEN");
 		/*System.out.println("e.getX() < 0 : "+ (e.getX() < 0) +"\n" + 
@@ -165,29 +163,11 @@ public class Automaton extends JPanel implements MouseListener,KeyListener
 		newTrait(e.getX(), e.getY());
 		trait_origin = null;
 	    }
-	else
+	else if(edit == false)
 	    {
 		//System.out.println("mouseReleased: nouveau noeud");
 		newNode(e.getX(), e.getY());
 	    }
-}
-
-
-    
-    public void keyPressed(KeyEvent e) {
-	// TODO Auto-generated method stub
-	System.out.println(e);
     }
-    
-    public void keyReleased(KeyEvent e) {
-	// TODO Auto-generated method stub
-	System.out.println(e);
-    }
-    
-    public void keyTyped(KeyEvent e) {
-	// TODO Auto-generated method stub
-	System.out.println(e);
-    }
-    
 }
 
