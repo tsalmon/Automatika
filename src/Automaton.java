@@ -35,7 +35,7 @@ public class Automaton extends JPanel implements MouseListener
     }
 
     
-    public void newNode(int x, int y)
+    public void newNode(int x, int y, String name)
     {
 	boolean go = true;
 	for(int i = 0; i < coord.size(); i++)
@@ -51,9 +51,8 @@ public class Automaton extends JPanel implements MouseListener
 	if(go)
 	    {
 		draw_surface.getGraphics().drawOval(x-25, y-25, 50, 50);
-		draw_surface.getGraphics().drawString("q" + coord.size(), x-5, y+5);
+		draw_surface.getGraphics().drawString(name, x-5, y+5);
 		//System.out.println("q"+ coord.size());
-		coord.add(new Node(x,y, "q"+coord.size()));
 		//System.out.println("coord.size:" + coord.size());
 	    }
     }
@@ -106,6 +105,33 @@ public class Automaton extends JPanel implements MouseListener
 	    }
 	return null;
     }
+
+    public void Move(int x, int y)
+    {
+	Iterator<Node> it = trait_origin.transitions.iterator();
+	Graphics g = draw_surface.getGraphics();
+	Node n = null;
+	int old_x = trait_origin.x;
+	int old_y = trait_origin.y;
+	
+	g.setColor(draw_surface.getBackground());
+	trait_origin.x = x;
+	trait_origin.y = y;
+	g.drawOval(old_x-25, old_y-25, 50, 50);
+	g.fillOval(old_x-25, old_y-25, 50, 50);
+	while(it.hasNext())
+	    {
+		n = it.next();
+		//deleting phase
+		g.drawLine(old_x,old_y, n.x, n.y);
+		g.drawOval(n.x-25, n.y-25, 50, 50); 
+		//add phase
+		System.out.println(trait_origin.name);
+		newTrait(n.x, n.y);
+		System.out.println(n);		
+	    }
+	newNode(x, y, trait_origin.name);
+    }
     
     //Pressed => Released
     public void mouseClicked(MouseEvent e)
@@ -127,6 +153,7 @@ public class Automaton extends JPanel implements MouseListener
 	else if(e.getSource() == edit_button)
 	    {
 		edit = (edit) ? false : true;
+
 		System.out.println("edit = "  + edit);
 	    }
 	else if(e.getSource() == clean_button)
@@ -138,11 +165,7 @@ public class Automaton extends JPanel implements MouseListener
     public void mouseExited(MouseEvent e){}
     public void mousePressed(MouseEvent e)
     {
-	if(edit == false)
-	    {
-		System.out.println(e.getX() + " " + e.getY());
-		trait_origin = getNode(e.getX(), e.getY());
-	    }
+	trait_origin = getNode(e.getX(), e.getY());
     }    
     
     public void mouseReleased(MouseEvent e)
@@ -157,7 +180,11 @@ public class Automaton extends JPanel implements MouseListener
 		*/
 		return;
 	    }
-	if(trait_origin != null)
+	if(edit == true && trait_origin != null)
+	    {
+		Move(e.getX(), e.getY());
+	    }
+	if(trait_origin != null && edit == false)
 	    {
 		//System.out.println("trait released : ok");
 		newTrait(e.getX(), e.getY());
@@ -166,7 +193,10 @@ public class Automaton extends JPanel implements MouseListener
 	else if(edit == false)
 	    {
 		//System.out.println("mouseReleased: nouveau noeud");
-		newNode(e.getX(), e.getY());
+		String name = "q" + coord.size();
+		int x = e.getX(), y = e.getY();
+		newNode(x, y, name);
+		coord.add(new Node(x, y, name));
 	    }
     }
 }
