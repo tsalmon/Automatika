@@ -4,17 +4,38 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
 import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class Automaton extends JPanel implements MouseListener
 {
-    JPanel draw_surface = new JPanel();
+    BufferedImage img = new BufferedImage(Main.window_x, Main.window_y, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D draw_surface = img.createGraphics();
     JButton edit_button = new JButton("Edit");
     JButton save_button = new JButton("Save");    
     JButton clean_button = new JButton("Clean");
     boolean edit = false;
     Node trait_origin = null;
+    LinkedList<Trace> trace = new LinkedList<Trace>();
     LinkedList<Node> coord = new LinkedList<Node>();
     //private Panneau pan;
+
+    class Trace{
+	int u1;
+	int u2;
+	int v1;
+	int v2;
+	
+	Trace(int a, int b, int c, int d)
+	{
+	    u1 = a;
+	    u2 = b;
+	    v1 = c;
+	    v2 = d;
+	}
+    }
     
     public Automaton()
     {
@@ -30,6 +51,7 @@ public class Automaton extends JPanel implements MouseListener
 	add("North", header);
 	add("Center", draw_surface);
 	edit_button.addMouseListener(this);
+	save_button.addMouseListener(this);
 	draw_surface.addMouseListener(this);
 	setVisible(true);
     }
@@ -80,8 +102,9 @@ public class Automaton extends JPanel implements MouseListener
 			draw_surface.getGraphics().drawString(trait_origin.name, trait_origin.x-5, trait_origin.y+5);
 			trait_origin.add_transition(coord.get(i));
 			coord.get(i).add_transition(trait_origin);
-			System.out.println(coord.get(i).print_transitions());
-			System.out.println(trait_origin.print_transitions());
+			
+			//System.out.println(coord.get(i).print_transitions());
+			//System.out.println(trait_origin.print_transitions());
 			return;
 		    }
 		else
@@ -126,9 +149,9 @@ public class Automaton extends JPanel implements MouseListener
 		g.drawLine(old_x,old_y, n.x, n.y);
 		g.drawOval(n.x-25, n.y-25, 50, 50); 
 		//add phase
-		System.out.println(trait_origin.name);
+		//System.out.println(trait_origin.name);
 		newTrait(n.x, n.y);
-		System.out.println(n);		
+		//System.out.println(n);		
 	    }
 	newNode(x, y, trait_origin.name);
     }
@@ -139,7 +162,7 @@ public class Automaton extends JPanel implements MouseListener
 	trait_origin = getNode(e.getX(), e.getY());
 	if(e.getClickCount() == 2 && edit == true && trait_origin != null )
 	    {
-		System.out.println("double clicked");
+		//System.out.println("double clicked");
 	    }
 	else
 	    {
@@ -148,13 +171,20 @@ public class Automaton extends JPanel implements MouseListener
 	trait_origin = null;
 	if(e.getSource() == save_button)
 	    {
-		System.out.println("TODO: save_button");
+		try{
+		    BufferedImage bi = new BufferedImage(draw_surface.getWidth(), draw_surface.getHeight(), BufferedImage.TYPE_INT_RGB);
+		    Graphics2D g = bi.createGraphics();
+		    draw_surface.paint(g);
+		    ImageIO.write(bi, "PNG", new File("yourImageName.PNG"));
+		}
+		catch(IOException ioe)
+		    {
+			ioe.printStackTrace();
+		    }
 	    }
 	else if(e.getSource() == edit_button)
 	    {
 		edit = (edit) ? false : true;
-
-		System.out.println("edit = "  + edit);
 	    }
 	else if(e.getSource() == clean_button)
 	    {
@@ -172,7 +202,7 @@ public class Automaton extends JPanel implements MouseListener
     {
 	if(e.getX() < 50 || e.getY() < 0 || e.getX() >= Main.window_x || e.getY() >= Main.window_y)
 	    {
-		System.out.println("OUT OF THE SCREEN");
+		//System.out.println("OUT OF THE SCREEN");
 		/*System.out.println("e.getX() < 0 : "+ (e.getX() < 0) +"\n" + 
 				   "e.getY() < 0 : " + (e.getY() < 0)+ "\n" + 
 				   "e.getX() >= 500 : " + (e.getX() >= Main.window_x) + "\n" + 
