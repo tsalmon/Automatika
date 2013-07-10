@@ -9,10 +9,13 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
-public class Automaton extends JPanel implements MouseListener
+public class Automaton extends JPanel implements MouseListener, KeyListener
 {
-    BufferedImage img = new BufferedImage(Main.window_x, Main.window_y, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D draw_surface = img.createGraphics();
+    /*
+      BufferedImage img = new BufferedImage(Main.window_x, Main.window_y, BufferedImage.TYPE_INT_ARGB);
+      Graphics2D draw_surface = img.createGraphics();
+    */
+    JPanel draw_surface = new JPanel();
     JButton edit_button = new JButton("Edit");
     JButton save_button = new JButton("Save");    
     JButton clean_button = new JButton("Clean");
@@ -50,6 +53,7 @@ public class Automaton extends JPanel implements MouseListener
 	setLayout(new BorderLayout());
 	add("North", header);
 	add("Center", draw_surface);
+	addKeyListener(this);
 	edit_button.addMouseListener(this);
 	save_button.addMouseListener(this);
 	draw_surface.addMouseListener(this);
@@ -171,6 +175,7 @@ public class Automaton extends JPanel implements MouseListener
 	trait_origin = null;
 	if(e.getSource() == save_button)
 	    {
+		/*
 		try{
 		    BufferedImage bi = new BufferedImage(draw_surface.getWidth(), draw_surface.getHeight(), BufferedImage.TYPE_INT_RGB);
 		    Graphics2D g = bi.createGraphics();
@@ -181,6 +186,7 @@ public class Automaton extends JPanel implements MouseListener
 		    {
 			ioe.printStackTrace();
 		    }
+		*/
 	    }
 	else if(e.getSource() == edit_button)
 	    {
@@ -228,6 +234,18 @@ public class Automaton extends JPanel implements MouseListener
 		newNode(x, y, name);
 		coord.add(new Node(x, y, name));
 	    }
+    }
+    public void keyPressed(KeyEvent e)
+    {
+	System.out.println(e);
+    }
+    public void keyTyped(KeyEvent e)
+    {
+	System.out.println(e);
+    }
+    public void keyReleased(KeyEvent e)
+    {
+	System.out.println(e);
     }
 }
 
