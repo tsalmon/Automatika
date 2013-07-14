@@ -159,34 +159,31 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
         int old_x = trait_origin.x;
         int old_y = trait_origin.y;
 
+        newNode(x, y, trait_origin.name);	
         g.setColor(draw_surface.getBackground());
         trait_origin.x = x;
         trait_origin.y = y;
         g.drawOval(old_x-25, old_y-25, 50, 50);
         g.fillOval(old_x-25, old_y-25, 50, 50);
-        while(it.hasNext())
-            {
+	while(it.hasNext())
+	    {
+		g.setColor(draw_surface.getBackground());
                 n = it.next();
-                //deleting phase                                                                           
-                g.drawLine(old_x,old_y, n.x, n.y);
+                //deleting phase   
+		g.drawLine(old_x,old_y, n.x, n.y);
                 g.drawOval(n.x-25, n.y-25, 50, 50);
-                //add phase                                                                                
-                //System.out.println(trait_origin.name);                                                   
-                newTrait(n.x, n.y);
-                //System.out.println(n);                                                                   
+                //add phase 
+                //System.out.println(trait_origin.name);  
+		g.setColor(Color.BLACK);	
+		newTrait(n.x, n.y);
+                //System.out.println(n);   
             }
-        newNode(x, y, trait_origin.name);
     }
 
     public void keyTyped(KeyEvent e){System.out.println("keytyped");}
-    public void keyReleased(KeyEvent e){
-	if(edit) edit = false;
-    }
-    
-    public void keyPressed(KeyEvent e){
-	if(e.isControlDown())
-	    edit = true;
-    }
+    public void keyReleased(KeyEvent e){if(edit) edit = false;}
+    public void keyPressed(KeyEvent e){if(e.isControlDown()) edit = true;}
+
     public void mouseClicked(MouseEvent e){System.out.println("mouseclicked");}
     public void mouseReleased(MouseEvent e)
     {
@@ -201,13 +198,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
                 return;
             }
         if(edit == true && trait_origin != null)
-            {
-                Move(e.getX(), e.getY() - 25);
-            }
+	    Move(e.getX(), e.getY() - 25);
         if(trait_origin != null && edit == false)
-            {
-                newTrait(e.getX(), e.getY() - 25);
-                trait_origin = null;
+	    {
+		newTrait(e.getX(), e.getY() - 25);
+		trait_origin = null;
             }
         else if(edit == false)
             {
