@@ -179,12 +179,18 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
 
     public void keyTyped(KeyEvent e){System.out.println("keytyped");}
-    public void keyReleased(KeyEvent e){System.out.println("keyreleased");}
-    public void keyPressed(KeyEvent e){System.out.println("keypressed");}
+    public void keyReleased(KeyEvent e){
+	if(edit) edit = false;
+    }
+    
+    public void keyPressed(KeyEvent e){
+	if(e.isControlDown())
+	    edit = true;
+    }
     public void mouseClicked(MouseEvent e){System.out.println("mouseclicked");}
     public void mouseReleased(MouseEvent e)
     {
-	if(e.getX() < 50 || e.getY() < 0 || e.getX() >= 789 || e.getY() >= 456)
+	if(e.getX() < 0 || e.getY() -25 < 0 || e.getX() >= 789 || e.getY() -25  >= 456)
             {
                 System.out.println("OUT OF THE SCREEN");
                 /*System.out.println("e.getX() < 0 : "+ (e.getX() < 0) +"\n" +
@@ -196,24 +202,24 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
             }
         if(edit == true && trait_origin != null)
             {
-                Move(e.getX(), e.getY());
+                Move(e.getX(), e.getY() - 25);
             }
         if(trait_origin != null && edit == false)
             {
-                newTrait(e.getX(), e.getY());
+                newTrait(e.getX(), e.getY() - 25);
                 trait_origin = null;
             }
         else if(edit == false)
             {
                 String name = "q" + coord.size();
-                int x = e.getX(), y = e.getY()-25;
+                int x = e.getX(), y = e.getY() - 25;
                 newNode(x, y, name);
                 coord.add(new Node(x, y, name));
             }
     }
     
     public void mousePressed(MouseEvent e){
-        trait_origin = getNode(e.getX(), e.getY());
+        trait_origin = getNode(e.getX(), e.getY() - 25);
     }
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
