@@ -16,9 +16,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     boolean edit = false;
     boolean suppr = false;
     Node trait_origin = null;
-    LinkedList<Trace> trace = new LinkedList<Trace>();
-    LinkedList<Node> coord = new LinkedList<Node>();
+    static LinkedList<Trace> trace = new LinkedList<Trace>();
+    static LinkedList<Node> coord = new LinkedList<Node>();
     LinkedList<Action> actions = new LinkedList<Action>();
+    
     
     Automatika(int mode)
     {
@@ -320,16 +321,23 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	return null;
     }
     
+    // a < b < c
+    public boolean isBetween(int a, int b, int c){ return (a <= b && b <= c) || (a >= b && b >= c);}
+    
     public Trace getTrace(int click_x, int click_y)
     {
-	int x = 0,
-	    y = 0;
+	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 	for(int i = 0; i < trace.size(); i++)
 	    {
-		x = trace.get(i).v1 - trace.get(i).u1;
-		y = trace.get(i).v2 - trace.get(i).u2;
-		
-		System.out.println(x*click_y - y*click_x);
+		x1 = trace.get(i).v1 - trace.get(i).u1;
+		y1 = trace.get(i).v2 - trace.get(i).u2;
+		x2 = click_x - trace.get(i).u1;
+		y2 = click_y - trace.get(i).u2;
+		if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
+		   isBetween(trace.get(i).u1, click_x,trace.get(i).v1) && 
+		   isBetween(trace.get(i).u2, click_y,trace.get(i).v2)
+		   )
+		    return trace.get(i);
 	    }
 	return null;
     }
@@ -410,13 +418,15 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     {
 	if(e.getClickCount() == 2 && edit == true)
 	    {
-		getTrace(e.getX(), e.getY() - 25);
+		Trace t = getTrace(e.getX(), e.getY() - 25);
+		if(t != null)
+		    {
+			System.out.println(t + " selected");
+		    } 
 	    }
-	
     }
     public void mouseReleased(MouseEvent e)
     {
-	System.out.println("toto");
 	if(isOut(e.getX(), e.getY() - 25))
 	    {
 		return;
