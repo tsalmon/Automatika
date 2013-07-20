@@ -319,7 +319,21 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	return null;
     }
-
+    
+    public Trace getTrace(int click_x, int click_y)
+    {
+	int x = 0,
+	    y = 0;
+	for(int i = 0; i < trace.size(); i++)
+	    {
+		x = trace.get(i).v1 - trace.get(i).u1;
+		y = trace.get(i).v2 - trace.get(i).u2;
+		
+		System.out.println(x*click_y - y*click_x);
+	    }
+	return null;
+    }
+    
     public void Move(int x, int y)
     {
 	Iterator<Node> it = trait_origin.transitions.iterator();
@@ -366,6 +380,17 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     {
 		
     }
+
+    //If point is out of the screen
+    public boolean isOut(int click_x, int click_y)
+    {
+	if(click_x < 0 || click_y < 0 || click_x >= 789 || click_y >= 456)
+	    {
+		System.out.println("OUT OF THE SCREEN");
+		return true;
+	    }
+	return false;
+    }
 	
     public void keyTyped(KeyEvent e){/*System.out.println("keytyped");*/}
     public void keyReleased(KeyEvent e){
@@ -381,20 +406,23 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(e.getKeyCode() == KeyEvent.VK_DELETE)   { suppr = true;}
     }
 
-    public void mouseClicked(MouseEvent e){System.out.println("mouseclicked");}
+    public void mouseClicked(MouseEvent e)
+    {
+	if(e.getClickCount() == 2 && edit == true)
+	    {
+		getTrace(e.getX(), e.getY() - 25);
+	    }
+	
+    }
     public void mouseReleased(MouseEvent e)
     {
-	if(e.getX() < 0 || e.getY() -25 < 0 || e.getX() >= 789 || e.getY() -25 >= 456)
+	System.out.println("toto");
+	if(isOut(e.getX(), e.getY() - 25))
 	    {
-		System.out.println("OUT OF THE SCREEN");
-		/*
-		  System.out.println("e.getX() < 0 : "+ (e.getX() < 0) +"\n" +
-		  "e.getY() < 0 : " + (e.getY() < 0)+ "\n" +
-		  "e.getX() >= 500 : " + (e.getX() >= Main.window_x) + "\n" +
-		  "e.getY() >= 300 : " + ( e.getY() >= Main.window_y));
-		*/
 		return;
 	    }
+	
+	
 	if(suppr == true && trait_origin != null)
 	    {
 		delete(getNode(e.getX(), e.getY() - 25));
