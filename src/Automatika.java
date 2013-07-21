@@ -1,7 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -19,8 +18,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     static LinkedList<Trace> trace = new LinkedList<Trace>();
     static LinkedList<Node> coord = new LinkedList<Node>();
     LinkedList<Action> actions = new LinkedList<Action>();
-    
-    
+        
     Automatika(int mode)
     {
 	if(mode == 1) // graphe non oriente
@@ -399,6 +397,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	return false;
     }
+
+    public void editNode()
+    {
+	Edit edit = new Edit();
+    }
 	
     public void keyTyped(KeyEvent e){/*System.out.println("keytyped");*/}
     public void keyReleased(KeyEvent e){
@@ -419,10 +422,28 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(e.getClickCount() == 2 && edit == true)
 	    {
 		Trace t = getTrace(e.getX(), e.getY() - 25);
+		trait_origin = getNode(e.getX(), e.getY() - 25);
 		if(t != null)
 		    {
-			System.out.println(t + " selected");
+			if(trait_origin != null)
+			    {
+				editNode();
+				repaint();
+			    }
+			else
+			    {
+				System.out.println(t + " selected");
+				return ;
+			    }
 		    } 
+		else
+		    {
+			if(trait_origin != null)
+			    {
+				editNode();
+				repaint();
+			    }
+		    }
 	    }
     }
     public void mouseReleased(MouseEvent e)
