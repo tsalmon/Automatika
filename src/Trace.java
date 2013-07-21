@@ -3,6 +3,7 @@ public class Trace{
     private int u2;
     private int v1;
     private int v2;
+    String name;
     
     Trace(int a, int b, int c, int d)
     {
@@ -30,6 +31,11 @@ public class Trace{
     int getY2()
     {
 	return v2;
+    }
+
+    public void setName(String name)
+    {
+	this.name = name;
     }
     
     public String toString()

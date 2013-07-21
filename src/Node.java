@@ -34,6 +34,11 @@ public class Node
     {
 	this.end = end;
     }
+
+    public void setName(String name)
+    {
+	this.name = name;
+    }
     
     public String toString()
     {

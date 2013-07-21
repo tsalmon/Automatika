@@ -25,8 +25,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     boolean edit = false;
     boolean suppr = false;
     Node trait_origin = null;
-    static LinkedList<Trace> trace = new LinkedList<Trace>();
-    static LinkedList<Node> coord = new LinkedList<Node>();
+    LinkedList<Trace> trace = new LinkedList<Trace>();
+    LinkedList<Node> coord = new LinkedList<Node>();
     LinkedList<Action> actions = new LinkedList<Action>();
 
     Automatika(int mode)
@@ -156,21 +156,36 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    add(pan);	    
 	}
 	
+	public void edit_node()
+	{
+	    coord.get(num).setStart(start.isSelected());
+	    coord.get(num).setEnd(end.isSelected());	    
+	    coord.get(num).setName(txt.getText());
+	}
+
+	public void edit_line()
+	{
+	    trace.get(num).setName(txt.getText());
+	}
+	
 	public void actionPerformed(ActionEvent e)
 	{  
 	    if(e.getSource() == ok)
 		{
 		    //System.out.println("btn -> ok, " + start.isSelected() + " " + end.isSelected());
-		    coord.get(num).setStart(start.isSelected());
-		    coord.get(num).setEnd(end.isSelected());
+		    if(is_node)
+			edit_node();
+		    else
+			edit_line();
 		    setVisible(false);
+		    repaint();
 		}
 	    else if(e.getSource() == cancel){
 		System.out.println("btn -> cancel");
 		setVisible(false);
 	    }
-	} 
-    }                                                                                     
+	}
+    }
     
     public void repaint()
     {
@@ -188,7 +203,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	Graphics g = draw_surface.getGraphics();
 	for(int i = 0; i < coord.size(); i++)
 	    {
-		System.out.println(coord.get(i));
 		g.setColor(draw_surface.getBackground());
 		g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 50, 50);
 		g.setColor(Color.black);
@@ -198,7 +212,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	System.out.println("repaint");		
     }
     
-    public void delete(Node n)
+ public void delete(Node n)
     {
 	for(int i = 0; i < coord.size(); i++)
 	    {
@@ -248,8 +262,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	if(go)
 	    {
-		draw_surface.getGraphics().drawOval(x-25, y-25, 50, 50);
 		draw_surface.getGraphics().drawString(name, x-5, y+5);
+		draw_surface.getGraphics().drawOval(x-25, y-25, 50, 50);
 		//System.out.println("q"+ coord.size());
 		//System.out.println("coord.size:" + coord.size());
 	    }
@@ -415,7 +429,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    y1 = trace.get(i).getY1(), 
 			    y2 = trace.get(i).getY2();
 			Node t = getNode(n.x, n.y);
-				
 			if((x1 == old_x && x2 == t.x && y1 == old_y && y2 == t.y) || (x1 == t.x && x2 == old_x && y1 == t.y && y2 == old_y))
 			    {
 				trace.set(i, new Trace(trait_origin.x,trait_origin.y, n.x, n.y));
