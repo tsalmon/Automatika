@@ -1,19 +1,23 @@
+import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox; 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.BorderLayout; 
-import java.util.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 public class Automatika extends JFrame implements MouseListener, KeyListener
 {
     int indice = 0;
@@ -24,15 +28,15 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     static LinkedList<Trace> trace = new LinkedList<Trace>();
     static LinkedList<Node> coord = new LinkedList<Node>();
     LinkedList<Action> actions = new LinkedList<Action>();
-        
+
     Automatika(int mode)
     {
 	if(mode == 1) // graphe non oriente
 	    System.out.println("g");
 	else if(mode == 2) // graphe oriente
-	    System.out.println("o");	
+	    System.out.println("o");
 	else if(mode == 3)// automaton
-	    System.out.println("a");	
+	    System.out.println("a");
 	setSize(789, 456);
 	this.setContentPane(draw_surface);
 	this.addMouseListener(this);
@@ -41,7 +45,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	setVisible(true);
     }
 
-	
     private class Action
     {
 	/*
@@ -90,87 +93,32 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    return num_action;
 	}
     }
-	
-    public class Trace{
-	private int u1;
-	private int u2;
-	private int v1;
-	private int v2;
-
-	Trace(int a, int b, int c, int d)
-	{
-	    u1 = a;
-	    u2 = b;
-	    v1 = c;
-	    v2 = d;
-	}
-
-	int getX1()
-	{
-	    return u1;
-	}
-
-	int getY1()
-	{
-	    return u2;
-	}
-		
-	int getX2()
-	{
-	    return v1;
-	}
-
-	int getY2()
-	{
-	    return v2;
-	}
-
-	public String toString()
-	{
-	    return "([" + u1 + ", " + u2 + "]; [" + v1 + ", " + v2 + "])";
-	}
-    }
-
-    public class Node
-    {
-	int x;
-	int y;
-	String name;
-	boolean start = false;
-	boolean end = false;
-	Set<Node> transitions = new HashSet<Node>();
-	Node(int a, int b, String n)
-	{
-	    x = a;
-	    y = b;
-	    name = n;
-	}
-
-	public void add_transition(Node q)
-	{
-	    transitions.add(q);
-	}
-	public String print_transitions()
-	{
-	    return transitions.toString();
-	}
-	
-	public String toString()
-	{
-	    return name +" (" + x + ", " + y + ")";
-	}
-    }
     
     public class Edit extends JFrame implements ActionListener
     {
 	JTextField txt = new JTextField(10);
 	JCheckBox start = new JCheckBox("Start");
 	JCheckBox end = new JCheckBox("End");
+	JCheckBox inversion = new JCheckBox("Inversion");
 	JButton ok = new JButton("Ok");
 	JButton cancel = new JButton("Cancel");
-	Edit(boolean b)// true => node; false => line
+	int num;
+	boolean is_node;
+	Edit(boolean b, int n)// true => node; false => line
 	{
+	    this.is_node = b;
+	    this.num = n;
 	    setSize(300, 150);
+	    if(b)
+		node();
+	    else
+		line();
+	    setDefaultCloseOperation(EXIT_ON_CLOSE);
+	    setVisible(true);
+	}
+
+	public void node()
+	{
 	    JPanel pan = new JPanel(new BorderLayout());
 	    JPanel pan_valeur = new JPanel();
 	    JPanel pan_node = new JPanel();
@@ -186,9 +134,26 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    pan.add("North", pan_valeur);
 	    pan.add("Center", pan_node);
 	    pan.add("South", pan_btn);
-	    add(pan);
-	    setDefaultCloseOperation(EXIT_ON_CLOSE);
-	    setVisible(true);
+	    add(pan);	    
+	}
+	
+	public void line()
+	{
+	    JPanel pan = new JPanel(new BorderLayout());
+	    JPanel pan_valeur = new JPanel();
+	    JPanel pan_line = new JPanel();
+	    JPanel pan_btn = new JPanel();
+	    pan_valeur.add(new JLabel("Valeur"));
+	    pan_valeur.add("jtxtfld", txt);
+	    pan_line.add(inversion); 
+	    pan_btn.add(cancel);
+	    pan_btn.add(ok);
+	    cancel.addActionListener(this);
+	    ok.addActionListener(this);
+	    pan.add("North", pan_valeur);
+	    pan.add("Center", pan_line);
+	    pan.add("South", pan_btn);
+	    add(pan);	    
 	}
 	
 	public void actionPerformed(ActionEvent e)
@@ -196,6 +161,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    if(e.getSource() == ok)
 		{
 		    //System.out.println("btn -> ok, " + start.isSelected() + " " + end.isSelected());
+		    coord.get(num).setStart(start.isSelected());
+		    coord.get(num).setEnd(end.isSelected());
 		    setVisible(false);
 		}
 	    else if(e.getSource() == cancel){
@@ -369,7 +336,22 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	return null;
     }
-    
+
+    public int getNumNode(int x, int y)
+    {
+	for(int i = 0; i < coord.size(); i++)
+	    {
+		if( y >= coord.get(i).y - 25 &&
+		    y <= coord.get(i).y + 25 &&
+		    x >= coord.get(i).x - 25 &&
+		    x <= coord.get(i).x + 25)
+		    {
+			return i;
+		    }
+	    }
+	return -1;
+    }
+
     // a < b < c
     public boolean isBetween(int a, int b, int c){ return (a <= b && b <= c) || (a >= b && b >= c);}
     
@@ -378,19 +360,36 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 	for(int i = 0; i < trace.size(); i++)
 	    {
-		x1 = trace.get(i).v1 - trace.get(i).u1;
-		y1 = trace.get(i).v2 - trace.get(i).u2;
-		x2 = click_x - trace.get(i).u1;
-		y2 = click_y - trace.get(i).u2;
+		x1 = trace.get(i).getX2() - trace.get(i).getX1();
+		y1 = trace.get(i).getY2() - trace.get(i).getY1();
+		x2 = click_x - trace.get(i).getX1();
+		y2 = click_y - trace.get(i).getY1();
 		if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
-		   isBetween(trace.get(i).u1, click_x,trace.get(i).v1) && 
-		   isBetween(trace.get(i).u2, click_y,trace.get(i).v2)
+		   isBetween(trace.get(i).getX1(), click_x,trace.get(i).getX2()) && 
+		   isBetween(trace.get(i).getY1(), click_y,trace.get(i).getY2())
 		   )
 		    return trace.get(i);
 	    }
 	return null;
     }
     
+    public int getNumTrace(int click_x, int click_y)
+    {
+	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+	for(int i = 0; i < trace.size(); i++)
+	    {
+		x1 = trace.get(i).getX2() - trace.get(i).getX1();
+		y1 = trace.get(i).getY2() - trace.get(i).getY1();
+		x2 = click_x - trace.get(i).getX1();
+		y2 = click_y - trace.get(i).getY1();
+		if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
+		   isBetween(trace.get(i).getX1(), click_x,trace.get(i).getX2()) && 
+		   isBetween(trace.get(i).getY1(), click_y,trace.get(i).getY2()))
+		    return i;
+	    }
+	return -1;
+    }
+
     public void Move(int x, int y)
     {
 	Iterator<Node> it = trait_origin.transitions.iterator();
@@ -448,11 +447,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	return false;
     }
-
-    public void editNode()
-    {
-	Edit edit = new Edit(true);
-    }
 	
     public void keyTyped(KeyEvent e){/*System.out.println("keytyped");*/}
     public void keyReleased(KeyEvent e){
@@ -472,31 +466,19 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     {
 	if(e.getClickCount() == 2 && edit == true)
 	    {
-		Trace t = getTrace(e.getX(), e.getY() - 25);
-		trait_origin = getNode(e.getX(), e.getY() - 25);
-		if(t != null)
-		    {
-			if(trait_origin != null)
-			    {
-				editNode();
-				repaint();
-			    }
-			else
-			    {
-				System.out.println(t + " selected");
-				return ;
-			    }
-		    } 
+		int num_trace = getNumTrace(e.getX(), e.getY() - 25);
+	        int num_node = getNumNode(e.getX(), e.getY() - 25);
+		if(num_trace != -1)
+		    if(num_node != -1)
+			new Edit(true, num_node);
+		    else
+			new Edit(false, num_trace);
 		else
-		    {
-			if(trait_origin != null)
-			    {
-				editNode();
-				repaint();
-			    }
-		    }
+		    if(num_node != -1)
+			new Edit(true, num_node);
 	    }
     }
+    
     public void mouseReleased(MouseEvent e)
     {
 	if(isOut(e.getX(), e.getY() - 25))
