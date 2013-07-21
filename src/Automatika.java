@@ -1,12 +1,18 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import javax.swing.JCheckBox; 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout; 
 import java.util.*;
 public class Automatika extends JFrame implements MouseListener, KeyListener
 {
@@ -130,6 +136,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	int x;
 	int y;
 	String name;
+	boolean start = false;
+	boolean end = false;
 	Set<Node> transitions = new HashSet<Node>();
 	Node(int a, int b, String n)
 	{
@@ -146,13 +154,56 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	{
 	    return transitions.toString();
 	}
-
+	
 	public String toString()
 	{
 	    return name +" (" + x + ", " + y + ")";
 	}
     }
+    
+    public class Edit extends JFrame implements ActionListener
+    {
+	JTextField txt = new JTextField(10);
+	JCheckBox start = new JCheckBox("Start");
+	JCheckBox end = new JCheckBox("End");
+	JButton ok = new JButton("Ok");
+	JButton cancel = new JButton("Cancel");
+	Edit(boolean b)// true => node; false => line
+	{
+	    setSize(300, 150);
+	    JPanel pan = new JPanel(new BorderLayout());
+	    JPanel pan_valeur = new JPanel();
+	    JPanel pan_node = new JPanel();
+	    JPanel pan_btn = new JPanel();
+	    pan_valeur.add(new JLabel("Valeur"));
+	    pan_valeur.add("jtxtfld", txt);
+	    pan_node.add(start);   
+	    pan_node.add(end); 
+	    pan_btn.add(cancel);
+	    pan_btn.add(ok);
+	    cancel.addActionListener(this);
+	    ok.addActionListener(this);
+	    pan.add("North", pan_valeur);
+	    pan.add("Center", pan_node);
+	    pan.add("South", pan_btn);
+	    add(pan);
+	    setDefaultCloseOperation(EXIT_ON_CLOSE);
+	    setVisible(true);
+	}
 	
+	public void actionPerformed(ActionEvent e)
+	{  
+	    if(e.getSource() == ok)
+		{
+		    //System.out.println("btn -> ok, " + start.isSelected() + " " + end.isSelected());
+		    setVisible(false);
+		}
+	    else if(e.getSource() == cancel){
+		System.out.println("btn -> cancel");
+		setVisible(false);
+	    }
+	} 
+    }                                                                                     
     
     public void repaint()
     {
@@ -179,7 +230,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	System.out.println("repaint");		
     }
-	
+    
     public void delete(Node n)
     {
 	for(int i = 0; i < coord.size(); i++)
@@ -400,7 +451,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 
     public void editNode()
     {
-	Edit edit = new Edit();
+	Edit edit = new Edit(true);
     }
 	
     public void keyTyped(KeyEvent e){/*System.out.println("keytyped");*/}
