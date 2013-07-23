@@ -30,6 +30,11 @@ public class Node
 	return start;
     }
 
+    public boolean isEnd()
+    {
+	return end;
+    }
+
     public void setStart(boolean start)
     {
 	this.start = start;

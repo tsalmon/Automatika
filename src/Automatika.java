@@ -207,7 +207,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 50, 50);
 		g.setColor(Color.black);
 		g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
-		if(coord.get(i).isStart())
+		if(coord.get(i).isEnd())
 		    {
 			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
 		    }
