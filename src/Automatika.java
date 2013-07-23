@@ -191,6 +191,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     {
 	//Iterator<Trace> it_trace = trace.iterator();
 	//Iterator<Node> it_node = coord.iterator();		
+	Graphics g = draw_surface.getGraphics();
+	g.setColor(draw_surface.getBackground());
+	g.fillRect(0, 0, 789, 456);
+ 	g.setColor(Color.black);
 	for(int i = 0; i < trace.size(); i++)
 	    {
 		int x1 = trace.get(i).getX1(),
@@ -200,7 +204,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
 		//System.out.println(trace.get(i));
 	    }
-	Graphics g = draw_surface.getGraphics();
 	for(int i = 0; i < coord.size(); i++)
 	    {
 		g.setColor(draw_surface.getBackground());
@@ -211,6 +214,12 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    {
 			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
 		    }
+		if(coord.get(i).isStart())
+		   {
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
+		   }
 		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
 	    }
 	System.out.println("repaint");		
@@ -502,9 +511,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(isOut(e.getX(), e.getY() - 25))
 	    {
 		return;
-	    }
-	
-	
+	    }	
 	if(suppr == true && trait_origin != null)
 	    {
 		delete(getNode(e.getX(), e.getY() - 25));
