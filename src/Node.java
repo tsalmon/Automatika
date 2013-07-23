@@ -25,6 +25,11 @@ public class Node
 	return transitions.toString();
     }
 
+    public boolean isStart()
+    {
+	return start;
+    }
+
     public void setStart(boolean start)
     {
 	this.start = start;

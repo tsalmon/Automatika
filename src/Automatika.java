@@ -207,6 +207,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 50, 50);
 		g.setColor(Color.black);
 		g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
+		if(coord.get(i).isStart())
+		    {
+			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
+		    }
 		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
 	    }
 	System.out.println("repaint");		
@@ -296,6 +300,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			draw_surface.getGraphics().drawString(trait_origin.name, trait_origin.x-5, trait_origin.y+5);
 			trait_origin.add_transition(coord.get(i));
 			coord.get(i).add_transition(trait_origin);
+			repaint();
 			int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 			if(trace.size() == 0)
 			    {
