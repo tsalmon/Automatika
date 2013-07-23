@@ -429,7 +429,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    y1 = trace.get(i).getY1(), 
 			    y2 = trace.get(i).getY2();
 			Node t = getNode(n.x, n.y);
-			if((x1 == old_x && x2 == t.x && y1 == old_y && y2 == t.y) || (x1 == t.x && x2 == old_x && y1 == t.y && y2 == old_y))
+			if(t != null && ((x1 == old_x && x2 == t.x && y1 == old_y && y2 == t.y) || (x1 == t.x && x2 == old_x && y1 == t.y && y2 == old_y)))
 			    {
 				trace.set(i, new Trace(trait_origin.x,trait_origin.y, n.x, n.y));
 				break;

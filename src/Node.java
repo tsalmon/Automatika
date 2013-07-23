@@ -3,8 +3,8 @@ import java.util.HashSet;
 
 public class Node
 {
-    int x;
-    int y;
+    int x = 0;
+    int y = 0;
     String name;
     boolean start = false;
     boolean end = false;
