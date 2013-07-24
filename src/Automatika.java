@@ -45,55 +45,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	setVisible(true);
     }
 
-    private class Action
-    {
-	/*
-	 * 1: create node
-	 * 2: suppr node
-	 * 3: create path
-	 * 4: suppr path
-	 * 5: edit node
-	 * 6: edit path
-	 */
-	int num_action = 0;
-	Node n = null;
-	Trace t = null;
-	boolean start = false;
-	boolean end = false;
-	String value = null;
-	//1, 2
-	Action(int num, Node n)
-	{
-	    num_action = num;
-	    this.n = n;
-	}
-	//3, 4
-	Action(int num, Trace t)
-	{			
-	    num_action = num;
-	    this.t = t;
-	}
-	//5
-	Action(int num, boolean start, boolean end, String name)
-	{			
-	    num_action = num;
-	    this.start = start;
-	    this.end = end;
-	    value = name;
-	}
-	//6
-	Action(int num, String value)
-	{
-	    num_action = num;
-	    this.value = value;
-	}
-		
-	public int getNum()
-	{
-	    return num_action;
-	}
-    }
-    
+    //this class isuse for edit a node or a line in the paint
     public class Edit extends JFrame implements ActionListener
     {
 	JTextField txt = new JTextField(10);
@@ -117,6 +69,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    setVisible(true);
 	}
 
+	//if object is a node
 	public void node()
 	{
 	    JPanel pan = new JPanel(new BorderLayout());
@@ -125,8 +78,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    JPanel pan_btn = new JPanel();
 	    pan_valeur.add(new JLabel("Valeur"));
 	    pan_valeur.add("jtxtfld", txt);
-	    pan_node.add(start);   
-	    pan_node.add(end); 
+	    pan_node.add(start);
+	    pan_node.add(end);
 	    pan_btn.add(cancel);
 	    pan_btn.add(ok);
 	    cancel.addActionListener(this);
@@ -134,9 +87,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    pan.add("North", pan_valeur);
 	    pan.add("Center", pan_node);
 	    pan.add("South", pan_btn);
-	    add(pan);	    
+	    add(pan);
 	}
-	
+
+	//if object is a line
 	public void line()
 	{
 	    JPanel pan = new JPanel(new BorderLayout());
@@ -163,7 +117,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    coord.get(num).setName(txt.getText());
 	}
 
-	public void edit_line()
+	public void edit_line()//TODO: complete
 	{
 	    trace.get(num).setName(txt.getText());
 	}
@@ -189,8 +143,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     
     public void repaint()
     {
-	//Iterator<Trace> it_trace = trace.iterator();
-	//Iterator<Node> it_node = coord.iterator();		
 	Graphics g = draw_surface.getGraphics();
 	g.setColor(draw_surface.getBackground());
 	g.fillRect(0, 0, 789, 456);
@@ -202,7 +154,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    x2 = trace.get(i).getX2(),
 		    y2 = trace.get(i).getY2();
 		draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
-		//System.out.println(trace.get(i));
 	    }
 	for(int i = 0; i < coord.size(); i++)
 	    {
@@ -225,41 +176,36 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	System.out.println("repaint");		
     }
     
- public void delete(Node n)
+    public void delete(Node n)
     {
-	for(int i = 0; i < coord.size(); i++)
+	int i = 0, x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+	for(; i < coord.size() && !coord.get(i).equals(n); i++){}
+	if(i == coord.size()){ return;}
+	Graphics g = draw_surface.getGraphics();
+	g.setColor(draw_surface.getBackground());
+	g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 52, 52);
+	Iterator<Node> it_node = n.transitions.iterator();
+	Node s = null;
+	while(it_node.hasNext())
 	    {
-		if(coord.get(i).equals(n))
+		s = it_node.next();
+		g.drawLine(coord.get(i).x, coord.get(i).y, s.x, s.y);
+		for(int j = 0; j < trace.size(); j++)
 		    {
-			System.out.println("suppression");				
-			Graphics g = draw_surface.getGraphics();
-			g.setColor(draw_surface.getBackground());
-			g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 52, 52);
-			Iterator<Node> it_node = n.transitions.iterator();
-			Node s = null;
-			while(it_node.hasNext())
+			x1 = trace.get(j).getX1();
+			x2 = trace.get(j).getX2();
+			y1 = trace.get(j).getY1();
+			y2 = trace.get(j).getY2();
+			if((x1 == coord.get(i).x && y1 == coord.get(i).y && x2 == s.x && y2 == s.y) || (x1 == s.x && y1 == s.y && x2 == coord.get(i).x && y2 == coord.get(i).y))
 			    {
-				s = it_node.next();
-				g.drawLine(coord.get(i).x, coord.get(i).y, s.x, s.y);
-				for(int j = 0; j < trace.size(); j++)
-				    {
-					int x1 = trace.get(j).getX1(),
-					    x2 = trace.get(j).getX2(),
-					    y1 = trace.get(j).getY1(),
-					    y2 = trace.get(j).getY2();
-					if((x1 == coord.get(i).x && y1 == coord.get(i).y && x2 == s.x && y2 == s.y) || (x1 == s.x && y1 == s.y && x2 == coord.get(i).x && y2 == coord.get(i).y))
-					    {
-						System.out.println("DEL");
-						trace.remove(j);
-					    }
-				    }
+				trace.remove(j);
 			    }
-			coord.remove(i);
-			return;
 		    }
 	    }
+	coord.remove(i);
+	return;
     }
-	
+    	
     public void newNode(int x, int y, String name)
     {
 	boolean go = true;
@@ -281,7 +227,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		//System.out.println("coord.size:" + coord.size());
 	    }
     }
-
+    
     // TODO: split
     public void newTrait(int x, int y)
     {
@@ -295,7 +241,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    {
 			x_2 = coord.get(i).x;
 			y_2 = coord.get(i).y;
-			draw_surface.getGraphics().setColor(Color.red);
+			//draw_surface.getGraphics().setColor(Color.red);
 			//System.out.println("new trait: ok");
 			draw_surface.getGraphics().drawLine(trait_origin.x,trait_origin.y,coord.get(i).x, coord.get(i).y);
 			Graphics g = draw_surface.getGraphics();
@@ -309,7 +255,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			draw_surface.getGraphics().drawString(trait_origin.name, trait_origin.x-5, trait_origin.y+5);
 			trait_origin.add_transition(coord.get(i));
 			coord.get(i).add_transition(trait_origin);
-			repaint();
+			//repaint();
 			int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 			if(trace.size() == 0)
 			    {
@@ -328,7 +274,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 					if((x1 == x_1 && x2 == x_2 && y1 == y_1 && y2 == y_2) || (x1 == x_2 && x2 == x_1 && y1 == y_2 && y2 == y_1))
 					    {
 						exist = true;
-						System.out.println("exist");
 						break;
 					    }
 				    }
@@ -382,7 +327,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 
     // a < b < c
     public boolean isBetween(int a, int b, int c){ return (a <= b && b <= c) || (a >= b && b >= c);}
-    
+
+    //use colinears vectors
     public Trace getTrace(int click_x, int click_y)
     {
 	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -459,11 +405,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
     }
 
-    public void Back()
-    {
-		
-    }
-
     //If point is out of the screen
     public boolean isOut(int click_x, int click_y)
     {
@@ -475,6 +416,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	return false;
     }
 	
+    public void Save()
+    {
+	
+    }
+
     public void keyTyped(KeyEvent e){/*System.out.println("keytyped");*/}
     public void keyReleased(KeyEvent e){
 	if(e.getKeyCode() == KeyEvent.VK_CONTROL && edit) edit = false;
@@ -482,10 +428,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
     public void keyPressed(KeyEvent e){
 	if(e.isControlDown()) edit = true;
-	if(e.getKeyCode() == KeyEvent.VK_Z && edit){Back();}
+	if(e.getKeyCode() == KeyEvent.VK_Z && edit){System.out.println("Back");}
 	if(e.getKeyCode() == KeyEvent.VK_Y && edit){System.out.println("Move");}
 	if(e.getKeyCode() == KeyEvent.VK_O && edit){System.out.println("Open");}
-	if(e.getKeyCode() == KeyEvent.VK_S && edit){System.out.println("Save");}
+	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
 	if(e.getKeyCode() == KeyEvent.VK_DELETE)   { suppr = true;}
     }
 
