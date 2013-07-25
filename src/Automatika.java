@@ -418,7 +418,31 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	
     public void Save()
     {
-	
+	try {
+	    int width = 200, height = 200;
+	    
+	    // TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
+	    // into integer pixels
+	    BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+	    Graphics2D ig2 = bi.createGraphics();
+
+
+	    Font font = new Font("TimesRoman", Font.BOLD, 20);
+	    ig2.setFont(font);
+	    String message = "www.java2s.com!";
+	    FontMetrics fontMetrics = ig2.getFontMetrics();
+	    int stringWidth = fontMetrics.stringWidth(message);
+	    int stringHeight = fontMetrics.getAscent();
+	    ig2.setPaint(Color.black);
+	    ig2.drawString(message, (width - stringWidth) / 2, height / 2 + stringHeight / 4);
+
+	    ImageIO.write(bi, "png", new File("f.png"));
+	    
+	} catch (IOException ie) {
+	    ie.printStackTrace();
+	}
+
     }
 
     public void keyTyped(KeyEvent e){/*System.out.println("keytyped");*/}
