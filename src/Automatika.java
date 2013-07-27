@@ -38,7 +38,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     LinkedList<Action> actions = new LinkedList<Action>();
     int width = 789;
     int height = 456;
-
+    
+    /*
+      In this constructor deserve to choose wich mod we will use 
+      At this moment, we have just the mod no oriented graph
+     */
     Automatika(int mode)
     {
 	if(mode == 1) // graphe non oriente
@@ -55,7 +59,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	setVisible(true);
     }
 
-    //this class isuse for edit a node or a line in the paint
+    //this class is use for edit a node or a line in the paint
     public class Edit extends JFrame implements ActionListener
     {
 	JTextField txt = new JTextField(10);
@@ -150,7 +154,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	}
     }
-    
+
+    //actualize the panel after moved a node
     public void repaint()
     {
 	Graphics g = draw_surface.getGraphics();
@@ -185,7 +190,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	System.out.println("repaint");		
     }
-    
+
+    /*
+     * Remove a node and his traces for others nodes
+     */
     public void delete(Node n)
     {
 	int i = 0, x1 = 0, x2 = 0, y1 = 0, y2 = 0;
@@ -215,7 +223,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	coord.remove(i);
 	return;
     }
-    	
+
+    //create a node
     public void newNode(int x, int y, String name)
     {
 	boolean go = true;
@@ -237,7 +246,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		//System.out.println("coord.size:" + coord.size());
 	    }
     }
-    
+
+    /*
+     * to make a trace between two nodes
+     */
     // TODO: split
     public void newTrait(int x, int y)
     {
@@ -338,7 +350,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     // a < b < c
     public boolean isBetween(int a, int b, int c){ return (a <= b && b <= c) || (a >= b && b >= c);}
 
-    //use colinears vectors
+    //use colinears vector
+    /*
+      return the trace where the user has cliked
+     */
     public Trace getTrace(int click_x, int click_y)
     {
 	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -356,7 +371,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	return null;
     }
-    
+
+    /*
+      return the number of the trace where the user has clicked
+     */
     public int getNumTrace(int click_x, int click_y)
     {
 	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -374,6 +392,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	return -1;
     }
 
+    /*
+      to move a node
+     */
     public void Move(int x, int y)
     {
 	Iterator<Node> it = trait_origin.transitions.iterator();
@@ -425,7 +446,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	return false;
     }
-	
+
+    // to save the panel
+    //TODO: jpg
     public void Save()
     {
 	BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -473,7 +496,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	}
     }
 
-    public void keyTyped(KeyEvent e){/*System.out.println("keytyped");*/}
+    public void keyTyped(KeyEvent e){}
     public void keyReleased(KeyEvent e){
 	if(e.getKeyCode() == KeyEvent.VK_CONTROL && edit) edit = false;
 	if(e.getKeyCode() == KeyEvent.VK_DELETE && suppr) suppr = false;
