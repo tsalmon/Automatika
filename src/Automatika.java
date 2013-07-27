@@ -2,7 +2,11 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox; 
 import javax.swing.JButton;
@@ -10,7 +14,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.BorderLayout; 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -28,6 +36,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     LinkedList<Trace> trace = new LinkedList<Trace>();
     LinkedList<Node> coord = new LinkedList<Node>();
     LinkedList<Action> actions = new LinkedList<Action>();
+    int width = 789;
+    int height = 456;
 
     Automatika(int mode)
     {
@@ -37,7 +47,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    System.out.println("o");
 	else if(mode == 3)// automaton
 	    System.out.println("a");
-	setSize(789, 456);
+	setSize(width, height);
 	this.setContentPane(draw_surface);
 	this.addMouseListener(this);
 	this.addKeyListener(this);
@@ -418,31 +428,49 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	
     public void Save()
     {
-	try {
-	    int width = 200, height = 200;
-	    
-	    // TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
-	    // into integer pixels
-	    BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-	    Graphics2D ig2 = bi.createGraphics();
-
-
-	    Font font = new Font("TimesRoman", Font.BOLD, 20);
-	    ig2.setFont(font);
-	    String message = "www.java2s.com!";
-	    FontMetrics fontMetrics = ig2.getFontMetrics();
-	    int stringWidth = fontMetrics.stringWidth(message);
-	    int stringHeight = fontMetrics.getAscent();
-	    ig2.setPaint(Color.black);
-	    ig2.drawString(message, (width - stringWidth) / 2, height / 2 + stringHeight / 4);
-
-	    ImageIO.write(bi, "png", new File("f.png"));
-	    
-	} catch (IOException ie) {
-	    ie.printStackTrace();
+	BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	Graphics2D g = bi.createGraphics();
+	g.setColor(draw_surface.getBackground());
+	g.fillRect(0, 0, 789, 456);
+ 	g.setColor(Color.black);
+	for(int i = 0; i < trace.size(); i++)
+	    {
+		int x1 = trace.get(i).getX1(),
+		    y1 = trace.get(i).getY1(),
+		    x2 = trace.get(i).getX2(),
+		    y2 = trace.get(i).getY2();
+		draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
+	    }
+	for(int i = 0; i < coord.size(); i++)
+	    {
+		g.setColor(draw_surface.getBackground());
+		g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 50, 50);
+		g.setColor(Color.black);
+		g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
+		if(coord.get(i).isEnd())
+		    {
+			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
+		    }
+		if(coord.get(i).isStart())
+		   {
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
+		   }
+		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
+	    }
+	JFileChooser fc = new JFileChooser();
+	int returnVal = fc.showSaveDialog(this);
+	if (returnVal == JFileChooser.APPROVE_OPTION) {
+	    try{
+		File file = fc.getSelectedFile();
+		ImageIO.write(bi, "png", new File(file.getName() + ".png"));
+	    }
+	    catch(IOException ioe)
+		{
+		    ioe.printStackTrace();
+		}
 	}
-
     }
 
     public void keyTyped(KeyEvent e){/*System.out.println("keytyped");*/}
