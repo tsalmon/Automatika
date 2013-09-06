@@ -252,12 +252,16 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 
     /*
      * trait_origin is no null
-     * to make a trace between two nodes
+     * n is the node released
+     * definition: to make a trace between two nodes
      */
     // TODO: split
-    public void newTrait(int x, int y)
+    public void newTrait(Node n)
     {
-      
+	if(n != null)
+	    {
+		
+	    }
     }
     
     /*
@@ -555,7 +559,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }	
 	else if(trait_origin != null && edit == false)
 	    {
-		newTrait(e.getX(), e.getY() - 25);
+		newTrait(getNode(e.getX(), e.getY() - 25));
 		trait_origin = null;
 	    }
 	else if(edit == false)
