@@ -239,18 +239,15 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		x2 = trace.get(k).getX2();
 		y1 = trace.get(k).getY1();
 		y2 = trace.get(k).getY2();
-		//System.out.println("[" + x1 + " " + y1 + ", " + x2 + " " + y2 + "]\t[" + x_1 + " " + y_1 + " ," + x_2 + " " + y_2 +"]");
-		if((x1 == x_1 && x2 == x_2 && y1 == y_1 && y2 == y_2) || (x1 == x_2 && x2 == x_1 && y1 == y_2 && y2 == y_1))
+		if((x1 == x_1 && x2 == x_2 && y1 == y_1 && y2 == y_2) || 
+		   (x1 == x_2 && x2 == x_1 && y1 == y_2 && y2 == y_1))
 		    {
 			exist = true;
 			break;
 		    }
 	    }
 	if(!exist)
-	    {
-		//System.out.println("add new path => (" + x_1 + ", " + y_1 + "); (" + x_2 + ", " + y_2 + ")");
-		trace.add(new Trace(x_1, y_1, x_2, y_2));
-	    }
+	    trace.add(new Trace(x_1, y_1, x_2, y_2));
     }
 
     //create a node
