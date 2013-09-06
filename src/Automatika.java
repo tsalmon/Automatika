@@ -258,10 +258,32 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     // TODO: split
     public void newTrait(Node n)
     {
-	if(n != null)
+	if(n == null){ return;} // if node not found
+	int x_1 = trait_origin.x, y_1 = trait_origin.y, x_2 = n.x, y_2 = n.y;
+	int x1, x2, y1, y2;
+	draw_surface.getGraphics().drawLine(x_1, y_1, x_2, y_2);
+	trait_origin.add_transition(n);
+	n.add_transition(trait_origin);
+	boolean exist = false;
+	for(int k = 0; k < trace.size(); k++)
 	    {
-		
+		x1 = trace.get(k).getX1();
+		x2 = trace.get(k).getX2();
+		y1 = trace.get(k).getY1();
+		y2 = trace.get(k).getY2();
+		//System.out.println("[" + x1 + " " + y1 + ", " + x2 + " " + y2 + "]\t[" + x_1 + " " + y_1 + " ," + x_2 + " " + y_2 +"]");
+		if((x1 == x_1 && x2 == x_2 && y1 == y_1 && y2 == y_2) || (x1 == x_2 && x2 == x_1 && y1 == y_2 && y2 == y_1))
+		    {
+			exist = true;
+			break;
+		    }
 	    }
+	if(!exist)
+	    {
+		//System.out.println("add new path => (" + x_1 + ", " + y_1 + "); (" + x_2 + ", " + y_2 + ")");
+		trace.add(new Trace(x_1, y_1, x_2, y_2));
+	    }
+	repaint();
     }
     
     /*
@@ -446,7 +468,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		//add phase
 		//System.out.println(trait_origin.name);
 		g.setColor(Color.BLACK);	
-		newTrait(n.x, n.y);
+		newTrait(getNode(n.x, n.y));
 		//System.out.println(n);
 	    }
     }
