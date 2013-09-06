@@ -28,6 +28,7 @@ import java.awt.event.MouseListener;
 
 public class Automatika extends JFrame implements MouseListener, KeyListener
 {
+    int mode = 0; // 1 = no orient, 2 = orient, 3 = list
     int indice = 0;
     JPanel draw_surface = new JPanel();
     boolean edit = false;
@@ -46,11 +47,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     Automatika(int mode)
     {
 	if(mode == 1) // graphe non oriente
-	    System.out.println("g");
+	    this.mode = 1;
 	else if(mode == 2) // graphe oriente
-	    System.out.println("o");
+	    this.mode = 2;
 	else if(mode == 3)// automaton
-	    System.out.println("a");
+	    this.mode = 3;
 	setSize(width, height);
 	this.setContentPane(draw_surface);
 	this.addMouseListener(this);
@@ -59,9 +60,17 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	setVisible(true);
     }
 
+    /***********************
+     ***   CLASS  EDIT   ***
+     ***********************/
     //this class is use for edit a node or a line in the paint
     public class Edit extends JFrame implements ActionListener
     {
+	JPanel pan = new JPanel(new BorderLayout());
+	JPanel pan_valeur = new JPanel();
+	JPanel pan_line = new JPanel();
+	JPanel pan_btn = new JPanel();
+	JPanel pan_node = new JPanel();
 	JTextField txt = new JTextField(10);
 	JCheckBox start = new JCheckBox("Start");
 	JCheckBox end = new JCheckBox("End");
@@ -86,10 +95,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	//if object is a node
 	public void node()
 	{
-	    JPanel pan = new JPanel(new BorderLayout());
-	    JPanel pan_valeur = new JPanel();
-	    JPanel pan_node = new JPanel();
-	    JPanel pan_btn = new JPanel();
 	    pan_valeur.add(new JLabel("Valeur"));
 	    pan_valeur.add("jtxtfld", txt);
 	    pan_node.add(start);
@@ -107,10 +112,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	//if object is a line
 	public void line()
 	{
-	    JPanel pan = new JPanel(new BorderLayout());
-	    JPanel pan_valeur = new JPanel();
-	    JPanel pan_line = new JPanel();
-	    JPanel pan_btn = new JPanel();
 	    pan_valeur.add(new JLabel("Valeur"));
 	    pan_valeur.add("jtxtfld", txt);
 	    pan_line.add(inversion); 
@@ -154,6 +155,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	}
     }
+
+    /**************************
+     ***   FIN CLASS EDIT   ***
+     **************************/
 
     //actualize the panel after moved a node
     public void repaint()
@@ -242,15 +247,20 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    {
 		draw_surface.getGraphics().drawString(name, x-5, y+5);
 		draw_surface.getGraphics().drawOval(x-25, y-25, 50, 50);
-		//System.out.println("q"+ coord.size());
-		//System.out.println("coord.size:" + coord.size());
 	    }
     }
 
     /*
+     * trait_origin is no null
      * to make a trace between two nodes
      */
     // TODO: split
+    public void newTrait(int x, int y)
+    {
+      
+    }
+    
+    /*
     public void newTrait(int x, int y)
     {
 	int x_1 = trait_origin.x, y_1 = trait_origin.y, x_2 = 0, y_2 = 0;
@@ -316,6 +326,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    }
 	    }
     }
+    */
 	
     public Node getNode(int x, int y)
     {
@@ -439,16 +450,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     //If point is out of the screen
     public boolean isOut(int click_x, int click_y)
     {
-	if(click_x < 0 || click_y < 0 || click_x >= 789 || click_y >= 456)
-	    {
-		System.out.println("OUT OF THE SCREEN");
-		return true;
-	    }
-	return false;
+	return (click_x < 0 || click_y < 0 || click_x >= 789 || click_y >= 456);
     }
 
-    // to save the panel
-    //TODO: jpg
+    // to do it again, jpg
     public void Save()
     {
 	BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -495,6 +500,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		}
 	}
     }
+
+
+    /*-------------------------*
+     *---     CONTROLS      ---*
+     *-------------------------*/
 
     public void keyTyped(KeyEvent e){}
     public void keyReleased(KeyEvent e){
