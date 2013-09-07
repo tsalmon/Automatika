@@ -1,36 +1,58 @@
 public class Trace{
-    private int u1;
+    /*private int u1;
     private int u2;
     private int v1;
     private int v2;
+    */
+    private Node n1;
+    private Node n2;
+
     String name;
     
-    Trace(int a, int b, int c, int d)
+    Trace(Node n1, Node n2)
+    {
+	this.n1 = n1;
+	this.n2 = n2;
+    }
+    
+    /*Trace(int a, int b, int c, int d)
     {
 	u1 = a;
 	u2 = b;
 	v1 = c;
 	v2 = d;
-    }
+	}*/
+    
     
     int getX1()
     {
-	return u1;
+	return n1.x;
     }
     
     int getY1()
     {
-	return u2;
+	return n1.y;
     }
     
     int getX2()
     {
-	return v1;
+	return n2.x;
     }
     
     int getY2()
     {
-	return v2;
+	return n2.y;
+    }
+    
+
+    Node getN1()
+    {
+	return n1;
+    }
+
+    Node getN2()
+    {
+	return n2;
     }
 
     public void setName(String name)
@@ -40,6 +62,6 @@ public class Trace{
     
     public String toString()
     {
-	return "([" + u1 + ", " + u2 + "]; [" + v1 + ", " + v2 + "])";
+	return "([" + n1.x + ", " + n1.y + "]; [" + n2.x + ", " + n2.y + "])";
     }
 }
