@@ -1,3 +1,22 @@
+/**
+   TODO:
+   --- ALGO
+   1 : del trace
+   --- ACTIONS
+   2 : actions class
+   3 : ctrl X
+   4 : ctrl Y
+   --- IMG
+   5 : save to (API)
+   6 : save
+   7 : save as jpg
+   --- IMPRESSION
+   8 : API Windows
+   9 : API Linux
+   --- AF4
+   10: soon ...
+
+ **/
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.HashSet;
@@ -156,331 +175,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	}
     }
 
-    /**************************
-     ***   FIN CLASS EDIT   ***
-     **************************/
-
-    //actualize the panel after moved a node
-    public void repaint()
-    {
-	Graphics g = draw_surface.getGraphics();
-	g.setColor(draw_surface.getBackground());
-	g.fillRect(0, 0, 789, 456);
- 	g.setColor(Color.black);
-	for(int i = 0; i < trace.size(); i++)
-	    {
-		int x1 = trace.get(i).getX1(),
-		    y1 = trace.get(i).getY1(),
-		    x2 = trace.get(i).getX2(),
-		    y2 = trace.get(i).getY2();
-		draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
-	    }
-	for(int i = 0; i < coord.size(); i++)
-	    {
-		g.setColor(draw_surface.getBackground());
-		g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 50, 50);
-		g.setColor(Color.black);
-		g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
-		if(coord.get(i).isEnd())
-		    {
-			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
-		    }
-		if(coord.get(i).isStart())
-		   {
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
-		   }
-		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
-	    }
-	System.out.println("repaint");		
-    }
-
-    /*
-     * Remove a node and his traces for others nodes
-     */
-    public void delete(Node n)
-    {
-	int i = 0, x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-	for(; i < coord.size() && !coord.get(i).equals(n); i++){}
-	if(i == coord.size()){ return;}
-	Graphics g = draw_surface.getGraphics();
-	g.setColor(draw_surface.getBackground());
-	g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 52, 52);
-	Iterator<Node> it_node = n.transitions.iterator();
-	Node s = null;
-	while(it_node.hasNext())
-	    {
-		s = it_node.next();
-		g.drawLine(coord.get(i).x, coord.get(i).y, s.x, s.y);
-		for(int j = 0; j < trace.size(); j++)
-		    {
-			x1 = trace.get(j).getX1();
-			x2 = trace.get(j).getX2();
-			y1 = trace.get(j).getY1();
-			y2 = trace.get(j).getY2();
-			if((x1 == coord.get(i).x && y1 == coord.get(i).y && x2 == s.x && y2 == s.y) || (x1 == s.x && y1 == s.y && x2 == coord.get(i).x && y2 == coord.get(i).y))
-			    {
-				trace.remove(j);
-			    }
-		    }
-	    }
-	coord.remove(i);
-	return;
-    }
-
-    public void addTrace(int x_1, int y_1, int x_2, int y_2)
-    {
-	boolean exist = false;
-	int x1, x2, y1, y2;
-	for(int k = 0; k < trace.size(); k++)
-	    {
-		x1 = trace.get(k).getX1();
-		x2 = trace.get(k).getX2();
-		y1 = trace.get(k).getY1();
-		y2 = trace.get(k).getY2();
-		if((x1 == x_1 && x2 == x_2 && y1 == y_1 && y2 == y_2) || 
-		   (x1 == x_2 && x2 == x_1 && y1 == y_2 && y2 == y_1))
-		    {
-			exist = true;
-			break;
-		    }
-	    }
-	if(!exist)
-	    trace.add(new Trace(x_1, y_1, x_2, y_2));
-    }
-
-    //create a node
-    public void newNode(int x, int y, String name)
-    {
-	boolean go = true;
-	for(int i = 0; i < coord.size(); i++)
-	    {
-		if( y >= coord.get(i).y - 25 &&
-		    y <= coord.get(i).y + 25 &&
-		    x >= coord.get(i).x - 25 &&
-		    x <= coord.get(i).x + 25)
-		    {
-			go = false;
-		    }
-	    }
-	if(go)
-	    {
-		draw_surface.getGraphics().drawString(name, x-5, y+5);
-		draw_surface.getGraphics().drawOval(x-25, y-25, 50, 50);
-	    }
-    }
-
-    /*
-     * trait_origin is no null
-     * n is the node released
-     * definition: to make a trace between two nodes
-     */
-    // TODO: split
-    public void newTrait(Node n)
-    {
-	if(n == null){ return;} // if node not found
-	int x_1 = trait_origin.x, y_1 = trait_origin.y, x_2 = n.x, y_2 = n.y;
-	draw_surface.getGraphics().drawLine(x_1, y_1, x_2, y_2);
-	trait_origin.add_transition(n);
-	n.add_transition(trait_origin);
-	addTrace(x_1, y_1, x_2, y_2);
-	repaint();
-    }
-    
-    /*
-    public void newTrait(int x, int y)
-    {
-	int x_1 = trait_origin.x, y_1 = trait_origin.y, x_2 = 0, y_2 = 0;
-	for(int i = 0; i < coord.size(); i++)
-	    {
-		if( y >= coord.get(i).y - 25 &&
-		    y <= coord.get(i).y + 25 &&
-		    x >= coord.get(i).x - 25 &&
-		    x <= coord.get(i).x + 25)
-		    {
-			x_2 = coord.get(i).x;
-			y_2 = coord.get(i).y;
-			//draw_surface.getGraphics().setColor(Color.red);
-			//System.out.println("new trait: ok");
-			draw_surface.getGraphics().drawLine(trait_origin.x,trait_origin.y,coord.get(i).x, coord.get(i).y);
-			Graphics g = draw_surface.getGraphics();
-			g.setColor(draw_surface.getBackground());
-			g.fillOval(trait_origin.x-25, trait_origin.y-25, 50, 50);
-			g.fillOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
-			g.setColor(Color.black);
-			g.drawOval(trait_origin.x-25, trait_origin.y-25, 50, 50);
-			g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
-			draw_surface.getGraphics().drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);
-			draw_surface.getGraphics().drawString(trait_origin.name, trait_origin.x-5, trait_origin.y+5);
-			trait_origin.add_transition(coord.get(i));
-			coord.get(i).add_transition(trait_origin);
-			//repaint();
-			int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-			if(trace.size() == 0)
-			    {
-				trace.add(new Trace(x_1, y_1, x_2, y_2));
-			    }
-			else
-			    {
-				boolean exist = false;
-				for(int k = 0; k < trace.size(); k++)
-				    {
-					x1 = trace.get(k).getX1();
-					x2 = trace.get(k).getX2();
-					y1 = trace.get(k).getY1();
-					y2 = trace.get(k).getY2();
-					//System.out.println("[" + x1 + " " + y1 + ", " + x2 + " " + y2 + "]\t[" + x_1 + " " + y_1 + " ," + x_2 + " " + y_2 +"]");
-					if((x1 == x_1 && x2 == x_2 && y1 == y_1 && y2 == y_2) || (x1 == x_2 && x2 == x_1 && y1 == y_2 && y2 == y_1))
-					    {
-						exist = true;
-						break;
-					    }
-				    }
-				if(!exist)
-				    {
-					//System.out.println("add new path => (" + x_1 + ", " + y_1 + "); (" + x_2 + ", " + y_2 + ")");
-					trace.add(new Trace(x_1, y_1, x_2, y_2));
-					return;
-				    }
-			    }
-			//System.out.println(coord.get(i).print_transitions());
-			//System.out.println(trait_origin.print_transitions());
-			return;
-		    }
-		else
-		    {
-			//System.out.println("new trait : fail");
-		    }
-	    }
-    }
-    */
-	
-    public Node getNode(int x, int y)
-    {
-	for(int i = 0; i < coord.size(); i++)
-	    {
-		if( y >= coord.get(i).y - 25 &&
-		    y <= coord.get(i).y + 25 &&
-		    x >= coord.get(i).x - 25 &&
-		    x <= coord.get(i).x + 25)
-		    {
-			return coord.get(i);
-		    }
-	    }
-	return null;
-    }
-
-    public int getNumNode(int x, int y)
-    {
-	for(int i = 0; i < coord.size(); i++)
-	    {
-		if( y >= coord.get(i).y - 25 &&
-		    y <= coord.get(i).y + 25 &&
-		    x >= coord.get(i).x - 25 &&
-		    x <= coord.get(i).x + 25)
-		    {
-			return i;
-		    }
-	    }
-	return -1;
-    }
-
-    // a < b < c
-    public boolean isBetween(int a, int b, int c){ return (a <= b && b <= c) || (a >= b && b >= c);}
-
-    //use colinears vector
-    /*
-      return the trace where the user has cliked
-     */
-    public Trace getTrace(int click_x, int click_y)
-    {
-	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-	for(int i = 0; i < trace.size(); i++)
-	    {
-		x1 = trace.get(i).getX2() - trace.get(i).getX1();
-		y1 = trace.get(i).getY2() - trace.get(i).getY1();
-		x2 = click_x - trace.get(i).getX1();
-		y2 = click_y - trace.get(i).getY1();
-		if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
-		   isBetween(trace.get(i).getX1(), click_x,trace.get(i).getX2()) && 
-		   isBetween(trace.get(i).getY1(), click_y,trace.get(i).getY2())
-		   )
-		    return trace.get(i);
-	    }
-	return null;
-    }
-
-    /*
-      return the number of the trace where the user has clicked
-     */
-    public int getNumTrace(int click_x, int click_y)
-    {
-	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-	for(int i = 0; i < trace.size(); i++)
-	    {
-		x1 = trace.get(i).getX2() - trace.get(i).getX1();
-		y1 = trace.get(i).getY2() - trace.get(i).getY1();
-		x2 = click_x - trace.get(i).getX1();
-		y2 = click_y - trace.get(i).getY1();
-		if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
-		   isBetween(trace.get(i).getX1(), click_x,trace.get(i).getX2()) && 
-		   isBetween(trace.get(i).getY1(), click_y,trace.get(i).getY2()))
-		    return i;
-	    }
-	return -1;
-    }
-
-    /*
-      to move a node
-     */
-    public void Move(int x, int y)
-    {
-	Iterator<Node> it = trait_origin.transitions.iterator();
-	Graphics g = draw_surface.getGraphics();
-	Node n = null;
-	int old_x = trait_origin.x;
-	int old_y = trait_origin.y;
-	newNode(x, y, trait_origin.name);	
-	g.setColor(draw_surface.getBackground());
-	trait_origin.x = x;
-	trait_origin.y = y;
-	g.drawOval(old_x-25, old_y-25, 50, 50);
-	g.fillOval(old_x-25, old_y-25, 50, 50);
-	while(it.hasNext())
-	    {
-		g.setColor(draw_surface.getBackground());
-		n = it.next();
-		//deleting phase
-		for(int i = 0; i < trace.size(); i++)
-		    {
-			int x1 = trace.get(i).getX1(), 
-			    x2 = trace.get(i).getX2(), 
-			    y1 = trace.get(i).getY1(), 
-			    y2 = trace.get(i).getY2();
-			Node t = getNode(n.x, n.y);
-			if(t != null && ((x1 == old_x && x2 == t.x && y1 == old_y && y2 == t.y) || (x1 == t.x && x2 == old_x && y1 == t.y && y2 == old_y)))
-			    {
-				trace.set(i, new Trace(trait_origin.x,trait_origin.y, n.x, n.y));
-				break;
-			    }
-		    }
-		g.drawLine(old_x,old_y, n.x, n.y);
-		g.drawOval(n.x-25, n.y-25, 50, 50);
-		//add phase
-		//System.out.println(trait_origin.name);
-		g.setColor(Color.BLACK);	
-		newTrait(getNode(n.x, n.y));
-		//System.out.println(n);
-	    }
-    }
-
-    //If point is out of the screen
-    public boolean isOut(int click_x, int click_y)
-    {
-	return (click_x < 0 || click_y < 0 || click_x >= 789 || click_y >= 456);
-    }
-
     // to do it again, jpg
     public void Save()
     {
@@ -529,10 +223,286 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	}
     }
 
+    //actualize the panel after moved a node
+    public void repaint()
+    {
+	Graphics g = draw_surface.getGraphics();
+	g.setColor(draw_surface.getBackground());
+	g.fillRect(0, 0, 789, 456);
+ 	g.setColor(Color.black);
+	for(int i = 0; i < trace.size(); i++)
+	    {
+		int x1 = trace.get(i).getX1(),
+		    y1 = trace.get(i).getY1(),
+		    x2 = trace.get(i).getX2(),
+		    y2 = trace.get(i).getY2();
+		draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
+	    }
+	for(int i = 0; i < coord.size(); i++)
+	    {
+		g.setColor(draw_surface.getBackground());
+		g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 50, 50);
+		g.setColor(Color.black);
+		g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
+		if(coord.get(i).isEnd())
+		    {
+			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
+		    }
+		if(coord.get(i).isStart())
+		   {
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
+		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
+		   }
+		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
+	    }
+	//System.out.println("repaint");		
+    }
 
-    /*-------------------------*
+    /***************************
+     *---      TESTS        ---*
+     ***************************/    	
+
+    /* definition: test if a < b < c */
+    //call by: getTrace, getNumTrace
+    public boolean isBetween(int a, int b, int c){ return (a <= b && b <= c) || (a >= b && b >= c);}
+
+
+    /*definition: test if point is out of the screen*/
+    //call by: mouseReleased
+    public boolean isOut(int click_x, int click_y)
+    {
+	return (click_x < 0 || click_y < 0 || click_x >= 789 || click_y >= 456);
+    }
+    
+    /***************************
+     *---     GET/SET       ---*
+     ***************************/
+    
+    //use colinears vector
+    /*
+      return the trace where the user has cliked
+     */
+    public Trace getTrace(int click_x, int click_y)
+    {
+	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+	for(int i = 0; i < trace.size(); i++)
+	    {
+		x1 = trace.get(i).getX2() - trace.get(i).getX1();
+		y1 = trace.get(i).getY2() - trace.get(i).getY1();
+		x2 = click_x - trace.get(i).getX1();
+		y2 = click_y - trace.get(i).getY1();
+		if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
+		   isBetween(trace.get(i).getX1(), click_x,trace.get(i).getX2()) && 
+		   isBetween(trace.get(i).getY1(), click_y,trace.get(i).getY2())
+		   )
+		    return trace.get(i);
+	    }
+	return null;
+    }
+
+    /*
+      return the number of the trace where the user has clicked
+     */
+    public int getNumTrace(int click_x, int click_y)
+    {
+	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+	for(int i = 0; i < trace.size(); i++)
+	    {
+		x1 = trace.get(i).getX2() - trace.get(i).getX1();
+		y1 = trace.get(i).getY2() - trace.get(i).getY1();
+		x2 = click_x - trace.get(i).getX1();
+		y2 = click_y - trace.get(i).getY1();
+		if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
+		   isBetween(trace.get(i).getX1(), click_x,trace.get(i).getX2()) && 
+		   isBetween(trace.get(i).getY1(), click_y,trace.get(i).getY2()))
+		    return i;
+	    }
+	return -1;
+    }
+
+    public Node getNode(int x, int y)
+    {
+	for(int i = 0; i < coord.size(); i++)
+	    {
+		if( y >= coord.get(i).y - 25 &&
+		    y <= coord.get(i).y + 25 &&
+		    x >= coord.get(i).x - 25 &&
+		    x <= coord.get(i).x + 25)
+		    {
+			return coord.get(i);
+		    }
+	    }
+	return null;
+    }
+
+    public int getNumNode(int x, int y)
+    {
+	for(int i = 0; i < coord.size(); i++)
+	    {
+		if( y >= coord.get(i).y - 25 &&
+		    y <= coord.get(i).y + 25 &&
+		    x >= coord.get(i).x - 25 &&
+		    x <= coord.get(i).x + 25)
+		    {
+			return i;
+		    }
+	    }
+	return -1;
+    }
+
+
+    /***************************
+     *---     ACTIONS       ---*
+     ***************************/
+
+    //create a node
+    public void newNode(int x, int y, String name)
+    {
+	boolean go = true;
+	for(int i = 0; i < coord.size(); i++)
+	    {
+		if( y >= coord.get(i).y - 25 &&
+		    y <= coord.get(i).y + 25 &&
+		    x >= coord.get(i).x - 25 &&
+		    x <= coord.get(i).x + 25)
+		    {
+			go = false;
+		    }
+	    }
+	if(go)
+	    {
+		draw_surface.getGraphics().drawString(name, x-5, y+5);
+		draw_surface.getGraphics().drawOval(x-25, y-25, 50, 50);
+	    }
+    }
+
+    /*
+     * trait_origin is no null
+     * n is the node released
+     * definition: to make a trace between two nodes
+     */
+    // TODO: split
+    public void newTrait(Node n)
+    {
+	if(n == null){ return;} // if node not found
+	int x_1 = trait_origin.x, y_1 = trait_origin.y, x_2 = n.x, y_2 = n.y;
+	draw_surface.getGraphics().drawLine(x_1, y_1, x_2, y_2);
+	trait_origin.add_transition(n);
+	n.add_transition(trait_origin);
+	addTrace(x_1, y_1, x_2, y_2);
+	repaint();
+    }
+
+    /*
+     * Remove a node and his traces for others nodes
+     */
+    public void delete(Node n)
+    {
+	int i = 0, x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+	for(; i < coord.size() && !coord.get(i).equals(n); i++){}
+	if(i == coord.size()){ return;}
+	Graphics g = draw_surface.getGraphics();
+	g.setColor(draw_surface.getBackground());
+	g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 52, 52);
+	Iterator<Node> it_node = n.transitions.iterator();
+	Node s = null;
+	while(it_node.hasNext())
+	    {
+		s = it_node.next();
+		g.drawLine(coord.get(i).x, coord.get(i).y, s.x, s.y);
+		for(int j = 0; j < trace.size(); j++)
+		    {
+			x1 = trace.get(j).getX1();
+			x2 = trace.get(j).getX2();
+			y1 = trace.get(j).getY1();
+			y2 = trace.get(j).getY2();
+			if((x1 == coord.get(i).x && y1 == coord.get(i).y && x2 == s.x && y2 == s.y) || (x1 == s.x && y1 == s.y && x2 == coord.get(i).x && y2 == coord.get(i).y))
+			    {
+				trace.remove(j);
+			    }
+		    }
+	    }
+	coord.remove(i);
+	return;
+    }
+
+    public void delTrace(Trace t)
+    {
+	if(t == null){return ;}
+	
+    }
+
+    public void addTrace(int x_1, int y_1, int x_2, int y_2)
+    {
+	boolean exist = false;
+	int x1, x2, y1, y2;
+	for(int k = 0; k < trace.size(); k++)
+	    {
+		x1 = trace.get(k).getX1();
+		x2 = trace.get(k).getX2();
+		y1 = trace.get(k).getY1();
+		y2 = trace.get(k).getY2();
+		if((x1 == x_1 && x2 == x_2 && y1 == y_1 && y2 == y_2) || 
+		   (x1 == x_2 && x2 == x_1 && y1 == y_2 && y2 == y_1))
+		    {
+			exist = true;
+			break;
+		    }
+	    }
+	if(!exist)
+	    trace.add(new Trace(x_1, y_1, x_2, y_2));
+    }
+
+
+    /*
+      to move a node
+     */
+    public void Move(int x, int y)
+    {
+	Iterator<Node> it = trait_origin.transitions.iterator();
+	Graphics g = draw_surface.getGraphics();
+	Node n = null;
+	int old_x = trait_origin.x;
+	int old_y = trait_origin.y;
+	newNode(x, y, trait_origin.name);	
+	g.setColor(draw_surface.getBackground());
+	trait_origin.x = x;
+	trait_origin.y = y;
+	g.drawOval(old_x-25, old_y-25, 50, 50);
+	g.fillOval(old_x-25, old_y-25, 50, 50);
+	while(it.hasNext())
+	    {
+		g.setColor(draw_surface.getBackground());
+		n = it.next();
+		//deleting phase
+		for(int i = 0; i < trace.size(); i++)
+		    {
+			int x1 = trace.get(i).getX1(), 
+			    x2 = trace.get(i).getX2(), 
+			    y1 = trace.get(i).getY1(), 
+			    y2 = trace.get(i).getY2();
+			Node t = getNode(n.x, n.y);
+			if(t != null && ((x1 == old_x && x2 == t.x && y1 == old_y && y2 == t.y) || (x1 == t.x && x2 == old_x && y1 == t.y && y2 == old_y)))
+			    {
+				trace.set(i, new Trace(trait_origin.x,trait_origin.y, n.x, n.y));
+				break;
+			    }
+		    }
+		g.drawLine(old_x,old_y, n.x, n.y);
+		g.drawOval(n.x-25, n.y-25, 50, 50);
+		//add phase
+		//System.out.println(trait_origin.name);
+		g.setColor(Color.BLACK);	
+		newTrait(getNode(n.x, n.y));
+		//System.out.println(n);
+	    }
+    }
+
+
+    /***************************
      *---     CONTROLS      ---*
-     *-------------------------*/
+     ***************************/
 
     public void keyTyped(KeyEvent e){}
     public void keyReleased(KeyEvent e){
@@ -575,6 +545,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    {
 		delete(getNode(e.getX(), e.getY() - 25));
 		repaint();
+	    }
+	else if(suppr)
+	    {
+		delTrace(getTrace(e.getX(), e.getY() - 25));
 	    }
 	else if(edit == true && trait_origin != null)
 	    {
