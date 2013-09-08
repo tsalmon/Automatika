@@ -15,8 +15,7 @@
    9 : API Linux
    --- AF4
    10: soon ...
-
- **/
+**/
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.HashSet;
@@ -390,12 +389,12 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	draw_surface.getGraphics().drawLine(x_1, y_1, x_2, y_2);
 	trait_origin.add_transition(n);
 	n.add_transition(trait_origin);
-	addTrace(x_1, y_1, x_2, y_2);
+	addTrace(n);
 	repaint();
     }
 
     /*
-     * Remove a node and his traces for others nodes
+     * Remove a node and his traces from others nodes
      */
     public void delete(Node n)
     {
@@ -413,11 +412,17 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		g.drawLine(coord.get(i).x, coord.get(i).y, s.x, s.y);
 		for(int j = 0; j < trace.size(); j++)
 		    {
+			/*
 			x1 = trace.get(j).getX1();
 			x2 = trace.get(j).getX2();
 			y1 = trace.get(j).getY1();
 			y2 = trace.get(j).getY2();
 			if((x1 == coord.get(i).x && y1 == coord.get(i).y && x2 == s.x && y2 == s.y) || (x1 == s.x && y1 == s.y && x2 == coord.get(i).x && y2 == coord.get(i).y))
+			    {
+				trace.remove(j);
+			    }
+			*/
+			if(trace.get(j).getN1() == n || trace.get(j).getN2() == n)
 			    {
 				trace.remove(j);
 			    }
@@ -430,15 +435,32 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     public void delTrace(Trace t)
     {
 	if(t == null){return ;}
-	
+	if(t.getN1() == t.getN2())
+	    {
+		System.out.println("not yet, todo");
+	    }
+	else
+	    {
+		t.getN1().suppr_transition(t.getN2());
+		t.getN2().suppr_transition(t.getN1());
+		for(int i = 0 ; i < trace.size(); i++)
+		    {
+			if(trace.get(i) == t)
+			    {
+				trace.remove(i);
+			    }
+		    }
+		repaint();
+	    }
     }
 
-    public void addTrace(int x_1, int y_1, int x_2, int y_2)
+    public void addTrace(Node n)
     {
 	boolean exist = false;
 	int x1, x2, y1, y2;
 	for(int k = 0; k < trace.size(); k++)
 	    {
+		/*
 		x1 = trace.get(k).getX1();
 		x2 = trace.get(k).getX2();
 		y1 = trace.get(k).getY1();
@@ -449,9 +471,16 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			exist = true;
 			break;
 		    }
+		*/
+		if((trace.get(k).getN1() == trait_origin && trace.get(k).getN2() == n) ||
+		   (trace.get(k).getN1() == n && trace.get(k).getN2() == trait_origin))
+		    {
+			exist = true;
+			break;
+		    }
 	    }
 	if(!exist)
-	    trace.add(new Trace(x_1, y_1, x_2, y_2));
+	    trace.add(new Trace(trait_origin, n));
     }
 
 
@@ -476,6 +505,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		g.setColor(draw_surface.getBackground());
 		n = it.next();
 		//deleting phase
+		/*
 		for(int i = 0; i < trace.size(); i++)
 		    {
 			int x1 = trace.get(i).getX1(), 
@@ -489,6 +519,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 				break;
 			    }
 		    }
+		*/
 		g.drawLine(old_x,old_y, n.x, n.y);
 		g.drawOval(n.x-25, n.y-25, 50, 50);
 		//add phase

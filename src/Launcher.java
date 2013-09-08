@@ -14,7 +14,7 @@ public class Launcher extends JFrame implements ActionListener
     Launcher()
     {
 	JPanel pan = new JPanel();
-	setSize(789, 456);                                                                                         
+       	setSize(789, 456);                                                                                         
 	pan.add(Automaton);
 	pan.add(LinkedList);
 	pan.add(Graph);
@@ -51,8 +51,10 @@ public class Launcher extends JFrame implements ActionListener
 			   + "\t-o: LinkedList\n");	
     }
     
-    public static void main(String [] args)
+   public static void main(String [] args)
     {
+	new Automatika(1);
+	/*
 	if(args.length == 1)
 	    {
 		if(args[0].equals("-g"))//graphe non oriente                               
@@ -68,5 +70,6 @@ public class Launcher extends JFrame implements ActionListener
 	    f = new Launcher();
 	else
 	    help_launcher();
+    */
     }
 }

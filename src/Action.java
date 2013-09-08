@@ -7,6 +7,7 @@ public class Action
 	 * 4: suppr path
 	 * 5: edit node
 	 * 6: edit path
+	 * 7; move node
 	 */
 	int num_action = 0;
 	Node n = null;
@@ -34,8 +35,8 @@ public class Action
 	    this.end = end;
 	    value = name;
 	}
-	//6
-	Action(int num, String value)
+	//6 
+	Action(int num, String value)// last value
 	{
 	    num_action = num;
 	    this.value = value;
