@@ -24,7 +24,6 @@ public class Node
     public void suppr_transition(Node n)
     {
 	transitions.remove(n);
-	transitions.remove(n);
     }
 
     public String print_transitions()

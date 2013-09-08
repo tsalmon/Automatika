@@ -1,9 +1,9 @@
-/**
+ /**
    TODO:
    --- ALGO
-   1 : del trace
+   1: looping trace
    --- ACTIONS
-   2 : actions class
+   2: actions class
    3 : ctrl X
    4 : ctrl Y
    --- IMG
@@ -13,8 +13,8 @@
    --- IMPRESSION
    8 : API Windows
    9 : API Linux
-   --- AF4
-   10: soon ...
+   --- automaton
+   10: double trace
 **/
 import java.util.LinkedList;
 import java.util.Iterator;
