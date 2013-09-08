@@ -231,11 +231,18 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
  	g.setColor(Color.black);
 	for(int i = 0; i < trace.size(); i++)
 	    {
-		int x1 = trace.get(i).getX1(),
-		    y1 = trace.get(i).getY1(),
-		    x2 = trace.get(i).getX2(),
-		    y2 = trace.get(i).getY2();
-		draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
+		if(trace.get(i).isLoop())
+		    {
+			g.drawOval(trace.get(i).getX1()-50, trace.get(i).getY1()-50, 50, 50);
+		    }
+		else
+		    {
+			int x1 = trace.get(i).getX1(),
+			    y1 = trace.get(i).getY1(),
+			    x2 = trace.get(i).getX2(),
+			    y2 = trace.get(i).getY2();
+			draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
+		    }
 	    }
 	for(int i = 0; i < coord.size(); i++)
 	    {
@@ -258,6 +265,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	//System.out.println("repaint");		
     }
 
+    public void looping_trace(Node n)
+    {
+	
+    }
+    
     /***************************
      *---      TESTS        ---*
      ***************************/    	
@@ -386,7 +398,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     {
 	if(n == null){ return;} // if node not found
 	int x_1 = trait_origin.x, y_1 = trait_origin.y, x_2 = n.x, y_2 = n.y;
-	draw_surface.getGraphics().drawLine(x_1, y_1, x_2, y_2);
 	trait_origin.add_transition(n);
 	n.add_transition(trait_origin);
 	addTrace(n);
@@ -530,7 +541,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
     }
 
-
     /***************************
      *---     CONTROLS      ---*
      ***************************/
@@ -565,7 +575,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			new Edit(true, num_node);
 	    }
     }
-    
+
     public void mouseReleased(MouseEvent e)
     {
 	if(isOut(e.getX(), e.getY() - 25))
