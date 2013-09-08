@@ -1,20 +1,18 @@
  /**
    TODO:
-   --- ALGO
-   1: looping trace
    --- ACTIONS
-   2: actions class
-   3 : ctrl X
-   4 : ctrl Y
+   1: actions class
+   2 : ctrl X
+   3 : ctrl Y
    --- IMG
-   5 : save to (API)
-   6 : save
-   7 : save as jpg
+   4 : save to (API)
+   5 : save
+   6 : save as jpg
    --- IMPRESSION
-   8 : API Windows
-   9 : API Linux
+   7 : API Windows
+   8 : API Linux
    --- automaton
-   10: double trace
+   9: double trace
 **/
 import java.util.LinkedList;
 import java.util.Iterator;
