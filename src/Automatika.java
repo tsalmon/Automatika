@@ -238,7 +238,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		if(trace.get(i).isLoop())
 		    {
 			g.drawOval(trace.get(i).getX1()-50, trace.get(i).getY1()-50, 50, 50);
-			
+			g.drawString(trace.get(i).name, trace.get(i).getX1()-40-(int)(trace.get(i).name.length()*2.8), trace.get(i).getY1()-50);
 		    }
 		else
 		    {
