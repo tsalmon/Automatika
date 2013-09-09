@@ -147,11 +147,13 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    coord.get(num).setStart(start.isSelected());
 	    coord.get(num).setEnd(end.isSelected());	    
 	    coord.get(num).setName(txt.getText());
+	    System.out.println("edit node");
 	}
 
 	public void edit_line()//TODO: complete
 	{
 	    trace.get(num).setName(txt.getText());
+	    System.out.println("edit trace");
 	}
 	
 	public void actionPerformed(ActionEvent e)
@@ -466,10 +468,12 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			if(trace.get(j).getN1() == n || trace.get(j).getN2() == n)
 			    {
 				trace.remove(j);
+				System.out.println("trace suppr");
 			    }
 		    }
 	    }
 	coord.remove(i);
+	System.out.println("node suppr");
 	return;
     }
 
@@ -489,6 +493,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			if(trace.get(i) == t)
 			    {
 				trace.remove(i);
+				System.out.println("trace suppr");
 			    }
 		    }
 		repaint();
@@ -520,8 +525,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			break;
 		    }
 	    }
-	if(!exist)
+	if(!exist){
 	    trace.add(new Trace(trait_origin, n));
+	    System.out.println("new trace");
+	}
     }
 
 
@@ -539,6 +546,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	g.setColor(draw_surface.getBackground());
 	trait_origin.x = x;
 	trait_origin.y = y;
+	/*
 	g.drawOval(old_x-25, old_y-25, 50, 50);
 	g.fillOval(old_x-25, old_y-25, 50, 50);
 	while(it.hasNext())
@@ -560,7 +568,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 				break;
 			    }
 		    }
-		*/
+		    
 		g.drawLine(old_x,old_y, n.x, n.y);
 		g.drawOval(n.x-25, n.y-25, 50, 50);
 		//add phase
@@ -569,6 +577,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		newTrait(getNode(n.x, n.y));
 		//System.out.println(n);
 	    }
+    */
+	repaint();
+	System.out.println("Move");
     }
 
     /***************************
@@ -637,6 +648,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		int x = e.getX(), y = e.getY() - 25;
 		newNode(x, y, name);
 		coord.add(new Node(x, y, name));
+		System.out.println("nouveau noeud");
 	    }
     }
 
