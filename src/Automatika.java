@@ -34,6 +34,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+//import java.awt.Event;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -220,6 +221,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	}
     }
 
+    public int dist(int x1, int y1, int x2, int y2)
+    {
+	return (int)(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
+    }
+
     //actualize the panel after moved a node
     public void repaint()
     {
@@ -232,6 +238,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		if(trace.get(i).isLoop())
 		    {
 			g.drawOval(trace.get(i).getX1()-50, trace.get(i).getY1()-50, 50, 50);
+			
 		    }
 		else
 		    {
@@ -239,6 +246,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    y1 = trace.get(i).getY1(),
 			    x2 = trace.get(i).getX2(),
 			    y2 = trace.get(i).getY2();
+			if(dist(x1, y1, x2, y2) > 80)
+			    g.drawString(trace.get(i).name, (x1+x2)/2, (y1+y2)/2);
 			draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
 		    }
 	    }
@@ -253,11 +262,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
 		    }
 		if(coord.get(i).isStart())
-		   {
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
-		   }
+		    {
+			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
+			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
+			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
+		    }
 		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
 	    }
 	//System.out.println("repaint");		
@@ -269,7 +278,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 
     /* definition: test if a < b < c */
     //call by: getTrace, getNumTrace
-    public boolean isBetween(int a, int b, int c){ return (a <= b && b <= c) || (a >= b && b >= c);}
+    public boolean isBetween(int a, int b, int c)
+    { 
+	return (a <= b && b <= c) || (a >= b && b >= c);
+    }
 
 
     /*definition: test if point is out of the screen*/

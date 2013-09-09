@@ -1,7 +1,8 @@
 public class Trace{
     private Node n1;
     private Node n2;
-    String name;
+    int loop_pos = 1; //1 = NoWe; 2 = NoEa; 3 = SoWe; 4 = SoEa;
+    String name = "";
     
     Trace(Node n1, Node n2)
     {
