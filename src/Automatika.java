@@ -47,6 +47,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 {
     int mode = 0; // 1 = no orient, 2 = orient, 3 = list
     int indice = 0;
+    int id_hist = -1;
+    int mousePressed_x = 0;
+    int mousePressed_y = 0;
     JPanel draw_surface = new JPanel();
     boolean edit = false;
     boolean suppr = false;
@@ -147,7 +150,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    coord.get(num).setStart(start.isSelected());
 	    coord.get(num).setEnd(end.isSelected());	    
 	    coord.get(num).setName(txt.getText());
-	    System.out.println("edit node");
+	    actions.add(new Action(5, num, start.isSelected(), end.isSelected(), txt.getText()));
+	    //System.out.println("edit node");
 	}
 
 	public void edit_line()//TODO: complete
@@ -169,7 +173,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    repaint();
 		}
 	    else if(e.getSource() == cancel){
-		System.out.println("btn -> cancel");
+		//System.out.println("btn -> cancel");
 		setVisible(false);
 	    }
 	}
@@ -337,7 +341,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     public int getNumTrace(int click_x, int click_y)
     {
 	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-	System.out.println(click_x + ", " + click_y);
+	//System.out.println(click_x + ", " + click_y);
 	for(int i = 0; i < trace.size(); i++)
 	    {
 		if(trace.get(i).isLoop() && 
@@ -432,7 +436,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	trait_origin.add_transition(n);
 	n.add_transition(trait_origin);
 	addTrace(n);
-	System.out.println(trace.get(trace.size()-1));
+	//System.out.println(trace.get(trace.size()-1));
 	repaint();
     }
 
@@ -467,13 +471,14 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			*/
 			if(trace.get(j).getN1() == n || trace.get(j).getN2() == n)
 			    {
-				trace.remove(j);
-				System.out.println("trace suppr");
+				trace.remove(j);				
+				//System.out.println("trace suppr");
 			    }
 		    }
 	    }
+	actions.add(new Action(2, i, coord.get(i)));	
 	coord.remove(i);
-	System.out.println("node suppr");
+	id_hist++;
 	return;
     }
 
@@ -482,7 +487,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(t == null){return ;}
 	if(t.getN1() == t.getN2())
 	    {
-		System.out.println("not yet, todo");
+		//System.out.println("not yet, todo");
 	    }
 	else
 	    {
@@ -493,7 +498,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			if(trace.get(i) == t)
 			    {
 				trace.remove(i);
-				System.out.println("trace suppr");
+				id_hist++;
+				//System.out.println("trace suppr");
 			    }
 		    }
 		repaint();
@@ -527,7 +533,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	if(!exist){
 	    trace.add(new Trace(trait_origin, n));
-	    System.out.println("new trace");
+	    actions.add(new Action(3, trace.size()-1, trace.get(trace.size()-1)));
+	    id_hist++;
+	    //System.out.println("new trace");
 	}
     }
 
@@ -542,6 +550,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	Node n = null;
 	int old_x = trait_origin.x;
 	int old_y = trait_origin.y;
+	System.out.println("move : (" + old_x + ", " + old_y + ") =>" + " (" + x + ", " + y + ")");
 	newNode(x, y, trait_origin.name);	
 	g.setColor(draw_surface.getBackground());
 	trait_origin.x = x;
@@ -579,7 +588,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
     */
 	repaint();
-	System.out.println("Move");
+	id_hist++;
+	actions.add(new Action(7, trait_origin,old_x, old_y, x, y));
     }
 
     /***************************
@@ -593,9 +603,15 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
     public void keyPressed(KeyEvent e){
 	if(e.isControlDown()) edit = true;
-	if(e.getKeyCode() == KeyEvent.VK_Z && edit){System.out.println("Back");}
-	if(e.getKeyCode() == KeyEvent.VK_Y && edit){System.out.println("Move");}
-	if(e.getKeyCode() == KeyEvent.VK_O && edit){System.out.println("Open");}
+	if(e.getKeyCode() == KeyEvent.VK_Z && edit){
+	    //if(id_hist > -1){System.out.println(actions.get(id_hist--));}
+	}
+	if(e.getKeyCode() == KeyEvent.VK_Y && edit){
+	    //System.out.println("Move");
+	}
+	if(e.getKeyCode() == KeyEvent.VK_O && edit){
+	    //System.out.println("Open");
+	}
 	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
 	if(e.getKeyCode() == KeyEvent.VK_DELETE)   { suppr = true;}
     }
@@ -617,8 +633,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
     }
 
+
     public void mouseReleased(MouseEvent e)
     {
+	int dist_mouse = dist(mousePressed_x, mousePressed_y, e.getX(), e.getY()-25);
 	if(isOut(e.getX(), e.getY() - 25))
 	    {
 		return;
@@ -632,8 +650,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    {
 		delTrace(getTrace(e.getX(), e.getY() - 25));
 	    }
-	else if(edit == true && trait_origin != null)
+	else if(edit == true && trait_origin != null && dist_mouse > 2)
 	    {
+		System.out.println(dist_mouse);
 		Move(e.getX(), e.getY() - 25);
 		repaint();
 	    }	
@@ -647,13 +666,21 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		String name = "q" + indice++;
 		int x = e.getX(), y = e.getY() - 25;
 		newNode(x, y, name);
+		id_hist++;
 		coord.add(new Node(x, y, name));
-		System.out.println("nouveau noeud");
+		actions.add(new Action(1, coord.size() - 1, coord.get(coord.size() - 1), x, y));
 	    }
+	for(int i = 0; i < actions.size(); i++)
+	    {
+		System.out.println(i + ": " +actions.get(i));
+	    }
+	System.out.println("--------------------------------------\n");
     }
-
+    
     public void mousePressed(MouseEvent e){
-	trait_origin = getNode(e.getX(), e.getY() - 25);
+	mousePressed_x = e.getX();
+	mousePressed_y = e.getY() - 25;
+	trait_origin = getNode(mousePressed_x, mousePressed_y);
     }
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
