@@ -178,7 +178,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	}
     }
+    
+    /** end class edit**/
 
+    
     // to do it again, jpg
     public void Save()
     {
@@ -276,6 +279,46 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
 	    }
 	//System.out.println("repaint");		
+    }
+
+    public void ctrl_z()
+    {
+	if(id_hist >= 0 )
+	    {
+		switch(actions.get(id_hist).getNum())
+		{
+		case 1:
+		    delete(actions.get(id_hist).getNode());
+		    break;
+		case 2:
+		    //(actio);
+		    break;
+		case 3:;break;
+		case 4:;break;
+		case 5:;break;
+		case 6:;break;
+		case 7:;break;
+		}
+		id_hist--;
+	    }
+    }
+    
+    public void ctrl_y()
+    {
+	if(id_hist < actions.size())
+	    {
+		switch(actions.get(id_hist).getNum())
+		{
+		case 1:break;
+		case 2:break;
+		case 3:break;
+		case 4:break;
+		case 5:break;
+		case 6:break;
+		case 7:break;
+		}
+		id_hist++;
+	    }
     }
 
     /***************************
@@ -382,6 +425,18 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	return null;
     }
 
+    public int getNodeId(Node n)
+    {
+	for(int i = 0; i < coord.size(); i++)
+	    {
+		if(coord.get(i) == n)
+		    {
+			return i;
+		    }
+	    }
+	return -1;
+    }
+    
     public int getNumNode(int x, int y)
     {
 	for(int i = 0; i < coord.size(); i++)
@@ -476,9 +531,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    }
 		    }
 	    }
-	actions.add(new Action(2, i, coord.get(i)));	
+	//actions.add(new Action(2, i, coord.get(i)));	
 	coord.remove(i);
-	id_hist++;
+	//id_hist++;
 	return;
     }
 
@@ -603,17 +658,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
     public void keyPressed(KeyEvent e){
 	if(e.isControlDown()) edit = true;
-	if(e.getKeyCode() == KeyEvent.VK_Z && edit){
-	    //if(id_hist > -1){System.out.println(actions.get(id_hist--));}
-	}
-	if(e.getKeyCode() == KeyEvent.VK_Y && edit){
-	    //System.out.println("Move");
-	}
-	if(e.getKeyCode() == KeyEvent.VK_O && edit){
-	    //System.out.println("Open");
-	}
+	if(e.getKeyCode() == KeyEvent.VK_Z && edit){ctrl_z();}
+	if(e.getKeyCode() == KeyEvent.VK_Y && edit){System.out.println("ctrl_y();");}
+	if(e.getKeyCode() == KeyEvent.VK_O && edit){System.out.println("open file");}
 	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
-	if(e.getKeyCode() == KeyEvent.VK_DELETE)   { suppr = true;}
+	if(e.getKeyCode() == KeyEvent.VK_DELETE){suppr=true;}
     }
 
     public void mouseClicked(MouseEvent e)
@@ -621,7 +670,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(e.getClickCount() == 2 && edit == true)
 	    {
 		int num_trace = getNumTrace(e.getX(), e.getY() - 25);
-	        int num_node = getNumNode(e.getX(), e.getY() - 25);
+	        int num_node  = getNumNode(e.getX(), e.getY() - 25);
 		if(num_trace != -1)
 		    if(num_node != -1)
 			new Edit(true, num_node);
@@ -668,7 +717,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		newNode(x, y, name);
 		id_hist++;
 		coord.add(new Node(x, y, name));
-		actions.add(new Action(1, coord.size() - 1, coord.get(coord.size() - 1), x, y));
+		actions.add(new Action(1, coord.get(coord.size() - 1), x, y));
 	    }
 	for(int i = 0; i < actions.size(); i++)
 	    {
