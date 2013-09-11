@@ -296,8 +296,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			System.out.println("2 => Node re-creat: " + coord.get(coord.size() - 1));
 			break;
 		    case 3:
-			System.out.println("3 => Trace suppr");
-			
+			System.out.println("TODO 3 => Trace suppr");
 			break;
 		    case 4:;break;
 		    case 5:;break;
