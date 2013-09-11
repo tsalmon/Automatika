@@ -292,8 +292,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			delete(actions.get(id_hist).getNode());
 			break;
 		    case 2:
-			System.out.println("2 => Node re-creat");
 			coord.add(actions.get(id_hist).getNode());
+			System.out.println("2 => Node re-creat: " + coord.get(coord.size() - 1));
 			break;
 		    case 3:
 			System.out.println("3 => Trace suppr");
@@ -536,9 +536,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    }
 		    }
 	    }
-	actions.add(new Action(2, coord.get(i)));	
 	coord.remove(i);
-	id_hist++;
 	repaint();
 	return;
     }
@@ -564,6 +562,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    }
 		    }
 		repaint();
+	      
 	    }
     }
 
@@ -664,7 +663,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
     public void keyPressed(KeyEvent e){
 	if(e.isControlDown()) edit = true;
-	if(e.getKeyCode() == KeyEvent.VK_Z && edit){ctrl_z();}
+	if(e.getKeyCode() == KeyEvent.VK_Z && edit){ctrl_z(); repaint();}
 	if(e.getKeyCode() == KeyEvent.VK_Y && edit){System.out.println("ctrl_y();");}
 	if(e.getKeyCode() == KeyEvent.VK_O && edit){System.out.println("open file");}
 	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
@@ -698,7 +697,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }	
 	if(suppr == true && trait_origin != null)
 	    {
-		delete(getNode(e.getX(), e.getY() - 25));
+		Node to_del = getNode(e.getX(), e.getY() - 25);
+		actions.add(new Action(2, to_del));	
+		delete(to_del);
+		id_hist++;
 		repaint();
 	    }
 	else if(suppr)
@@ -725,6 +727,12 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		coord.add(new Node(x, y, name));
 		actions.add(new Action(1, coord.get(coord.size() - 1), x, y));
 	    }
+	
+	if(id_hist < actions.size() - 1)
+	    {
+		System.out.println("id_hist < actions.size(): " + id_hist + "\t" + actions.size());
+	    }
+	
 	for(int i = 0; i < actions.size(); i++)
 	    {
 		System.out.println(i + ": " +actions.get(i));
