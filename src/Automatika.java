@@ -282,23 +282,25 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
 
     public void ctrl_z()
-    {
+    {	
+	System.out.println("enter");
 	if(id_hist >= 0 )
 	    {
 		switch(actions.get(id_hist).getNum())
-		{
-		case 1:
-		    delete(actions.get(id_hist).getNode());
-		    break;
-		case 2:
-		    //(actio);
-		    break;
-		case 3:;break;
-		case 4:;break;
-		case 5:;break;
-		case 6:;break;
-		case 7:;break;
-		}
+		    {
+		    case 1:
+			delete(actions.get(id_hist).getNode());
+			break;
+		    case 2:
+			System.out.println("enter");
+			coord.add(actions.get(id_hist).getNode());
+			break;
+		    case 3:;break;
+		    case 4:;break;
+		    case 5:;break;
+		    case 6:;break;
+		    case 7:;break;
+		    }
 		id_hist--;
 	    }
     }
@@ -531,9 +533,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    }
 		    }
 	    }
-	//actions.add(new Action(2, i, coord.get(i)));	
+	actions.add(new Action(2, coord.get(i)));	
 	coord.remove(i);
-	//id_hist++;
+	id_hist++;
 	return;
     }
 
@@ -658,7 +660,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
     public void keyPressed(KeyEvent e){
 	if(e.isControlDown()) edit = true;
-	if(e.getKeyCode() == KeyEvent.VK_Z && edit){ctrl_z();}
+	if(e.getKeyCode() == KeyEvent.VK_Z && edit){ctrl_z();repaint();}
 	if(e.getKeyCode() == KeyEvent.VK_Y && edit){System.out.println("ctrl_y();");}
 	if(e.getKeyCode() == KeyEvent.VK_O && edit){System.out.println("open file");}
 	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
