@@ -170,7 +170,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    else
 			edit_line();
 		    setVisible(false);
-		    repaint();
+		    //repaint();
 		}
 	    else if(e.getSource() == cancel){
 		//System.out.println("btn -> cancel");
@@ -497,7 +497,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	n.add_transition(trait_origin);
 	addTrace(n);
 	//System.out.println(trace.get(trace.size()-1));
-	repaint();
+	//repaint();
     }
 
     /*
@@ -537,7 +537,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    }
 	    }
 	coord.remove(i);
-	repaint();
+	//repaint();
 	return;
     }
 
@@ -561,7 +561,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 				//System.out.println("trace suppr");
 			    }
 		    }
-		repaint();
+		//repaint();
 	      
 	    }
     }
@@ -647,7 +647,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		//System.out.println(n);
 	    }
     */
-	repaint();
+	//repaint();
 	id_hist++;
 	actions.add(new Action(7, trait_origin,old_x, old_y, x, y));
     }
@@ -706,17 +706,19 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	else if(suppr)
 	    {
 		delTrace(getTrace(e.getX(), e.getY() - 25));
+		repaint();
 	    }
 	else if(edit == true && trait_origin != null && dist_mouse > 2)
 	    {
 		System.out.println(dist_mouse);
 		Move(e.getX(), e.getY() - 25);
 		repaint();
-	    }	
+	    }
 	else if(trait_origin != null && edit == false)
 	    {
 		newTrait(getNode(e.getX(), e.getY() - 25));
 		trait_origin = null;
+		repaint();
 	    }
 	else if(edit == false)
 	    {
@@ -726,8 +728,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		id_hist++;
 		coord.add(new Node(x, y, name));
 		actions.add(new Action(1, coord.get(coord.size() - 1), x, y));
+		repaint();
 	    }
-	
 	if(id_hist < actions.size() - 1)
 	    {
 		System.out.println("id_hist < actions.size(): " + id_hist + "\t" + actions.size());
