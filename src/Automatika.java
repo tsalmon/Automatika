@@ -163,15 +163,16 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    if(e.getSource() == ok)
 		{
 		    //System.out.println("btn -> ok, " + start.isSelected() + " " + end.isSelected());
+		    id_hist++;
 		    if(is_node)
 			{
-			    id_hist++;
 			    actions.add(new Action(5, coord.get(num), coord.get(num).getStart(), coord.get(num).getEnd(), coord.get(num).getName()));
 			    
 			    edit_node();
 			}
 		    else
 			{
+			    actions.add(new Action(6, trace.get(num), trace.get(num).getName()));
 			    edit_line();
 			}
 		    setVisible(false);
@@ -290,6 +291,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     {	
 	if(id_hist >= 0 )
 	    {
+		Action a = actions.get(id_hist);
 		switch(actions.get(id_hist).getNum())
 		    {
 		    case 1:
@@ -311,14 +313,24 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			addTrace(t.getN2());
 			break;
 		    case 5:
-			Action a = actions.get(id_hist);
 			System.out.println("5 => edit node");	
 			a.getNode().setStart(a.getStart());
 			a.getNode().setEnd(a.getEnd());
 			a.getNode().setName(a.getName());
 			break;
-		    case 6:;break;
-		    case 7:;break;
+		    case 6:
+			System.out.println("6 => edit trace");
+			actions.get(id_hist).getTrace().setName(actions.get(id_hist).getName());
+			break;
+		    case 7:
+			System.out.println("7 => move");
+			//Action a = actions.get(id_hist);
+			trait_origin = a.getNode();
+			System.out.println(trait_origin);
+			Move(a.getOldX(), a.getOldY());
+			System.out.println(trait_origin);
+			repaint();
+			break;
 		    default:
 			System.out.println("error");
 		    }
@@ -630,40 +642,38 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	trait_origin.x = x;
 	trait_origin.y = y;
 	/*
-	g.drawOval(old_x-25, old_y-25, 50, 50);
-	g.fillOval(old_x-25, old_y-25, 50, 50);
-	while(it.hasNext())
-	    {
-		g.setColor(draw_surface.getBackground());
-		n = it.next();
-		//deleting phase
-		/*
-		for(int i = 0; i < trace.size(); i++)
-		    {
-			int x1 = trace.get(i).getX1(), 
-			    x2 = trace.get(i).getX2(), 
-			    y1 = trace.get(i).getY1(), 
-			    y2 = trace.get(i).getY2();
-			Node t = getNode(n.x, n.y);
-			if(t != null && ((x1 == old_x && x2 == t.x && y1 == old_y && y2 == t.y) || (x1 == t.x && x2 == old_x && y1 == t.y && y2 == old_y)))
-			    {
-				trace.set(i, new Trace(trait_origin.x,trait_origin.y, n.x, n.y));
-				break;
-			    }
-		    }
-		    
-		g.drawLine(old_x,old_y, n.x, n.y);
-		g.drawOval(n.x-25, n.y-25, 50, 50);
-		//add phase
-		//System.out.println(trait_origin.name);
-		g.setColor(Color.BLACK);	
-		newTrait(getNode(n.x, n.y));
-		//System.out.println(n);
-	    }
-    */
+	  g.drawOval(old_x-25, old_y-25, 50, 50);
+	  g.fillOval(old_x-25, old_y-25, 50, 50);
+	  while(it.hasNext())
+	  {
+	  g.setColor(draw_surface.getBackground());
+	  n = it.next();
+	  //deleting phase
+	  /*
+	  for(int i = 0; i < trace.size(); i++)
+	  {
+	  int x1 = trace.get(i).getX1(), 
+	  x2 = trace.get(i).getX2(), 
+	  y1 = trace.get(i).getY1(), 
+	  y2 = trace.get(i).getY2();
+	  Node t = getNode(n.x, n.y);
+	  if(t != null && ((x1 == old_x && x2 == t.x && y1 == old_y && y2 == t.y) || (x1 == t.x && x2 == old_x && y1 == t.y && y2 == old_y)))
+	  {
+	  trace.set(i, new Trace(trait_origin.x,trait_origin.y, n.x, n.y));
+	  break;
+	  }
+	  }
+	  
+	  g.drawLine(old_x,old_y, n.x, n.y);
+	  g.drawOval(n.x-25, n.y-25, 50, 50);
+	  //add phase
+	  //System.out.println(trait_origin.name);
+	  g.setColor(Color.BLACK);	
+	  newTrait(getNode(n.x, n.y));
+	  //System.out.println(n);
+	  }
+	*/
 	//repaint();
-	id_hist++;
-	actions.add(new Action(7, trait_origin,old_x, old_y, x, y));
     }
 
     /***************************
@@ -728,7 +738,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	else if(edit == true && trait_origin != null && dist_mouse > 2)
 	    {
 		//System.out.println(dist_mouse);
+		actions.add(new Action(7, trait_origin, trait_origin.x, trait_origin.y));
 		Move(e.getX(), e.getY() - 25);
+		id_hist++;
 		repaint();
 	    }
 	else if(trait_origin != null && edit == false)
