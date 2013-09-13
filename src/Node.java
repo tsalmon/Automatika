@@ -55,7 +55,22 @@ public class Node
     {
 	this.name = name;
     }
-    
+
+    public String getName()
+    {
+	return (name);
+    }    
+
+    public boolean getStart()
+    {
+	return (start);
+    }
+
+    public boolean getEnd()
+    {
+	return (end);
+    }
+
     public String toString()
     {
 	return name +" (" + x + ", " + y + ")";

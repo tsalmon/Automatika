@@ -150,10 +150,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    coord.get(num).setStart(start.isSelected());
 	    coord.get(num).setEnd(end.isSelected());	    
 	    coord.get(num).setName(txt.getText());
-	    actions.add(new Action(5, num, start.isSelected(), end.isSelected(), txt.getText()));
-	    //System.out.println("edit node");
 	}
-
+	
 	public void edit_line()//TODO: complete
 	{
 	    trace.get(num).setName(txt.getText());
@@ -166,11 +164,18 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		{
 		    //System.out.println("btn -> ok, " + start.isSelected() + " " + end.isSelected());
 		    if(is_node)
-			edit_node();
+			{
+			    id_hist++;
+			    actions.add(new Action(5, coord.get(num), coord.get(num).getStart(), coord.get(num).getEnd(), coord.get(num).getName()));
+			    
+			    edit_node();
+			}
 		    else
-			edit_line();
+			{
+			    edit_line();
+			}
 		    setVisible(false);
-		    //repaint();
+		    repaint();
 		}
 	    else if(e.getSource() == cancel){
 		//System.out.println("btn -> cancel");
@@ -305,9 +310,17 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			trait_origin = t.getN1();
 			addTrace(t.getN2());
 			break;
-		    case 5:;break;
+		    case 5:
+			Action a = actions.get(id_hist);
+			System.out.println("5 => edit node");	
+			a.getNode().setStart(a.getStart());
+			a.getNode().setEnd(a.getEnd());
+			a.getNode().setName(a.getName());
+			break;
 		    case 6:;break;
 		    case 7:;break;
+		    default:
+			System.out.println("error");
 		    }
 		id_hist--;
 	    }
@@ -611,7 +624,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	Node n = null;
 	int old_x = trait_origin.x;
 	int old_y = trait_origin.y;
-	System.out.println("move : (" + old_x + ", " + old_y + ") =>" + " (" + x + ", " + y + ")");
+	//System.out.println("move : (" + old_x + ", " + old_y + ") =>" + " (" + x + ", " + y + ")");
 	newNode(x, y, trait_origin.name);	
 	g.setColor(draw_surface.getBackground());
 	trait_origin.x = x;
@@ -664,7 +677,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
     public void keyPressed(KeyEvent e){
 	if(e.isControlDown()) edit = true;
-	if(e.getKeyCode() == KeyEvent.VK_Z && edit){ctrl_z(); repaint();}
+	if(e.getKeyCode() == KeyEvent.VK_Z && edit){repaint(); ctrl_z(); repaint();}
 	if(e.getKeyCode() == KeyEvent.VK_Y && edit){System.out.println("ctrl_y();");}
 	if(e.getKeyCode() == KeyEvent.VK_O && edit){System.out.println("open file");}
 	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
@@ -714,7 +727,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	else if(edit == true && trait_origin != null && dist_mouse > 2)
 	    {
-		System.out.println(dist_mouse);
+		//System.out.println(dist_mouse);
 		Move(e.getX(), e.getY() - 25);
 		repaint();
 	    }

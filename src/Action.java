@@ -45,10 +45,10 @@ public class Action
 	    this.t = t;
 	}
 	//5
-	Action(int num, int num_node, boolean start, boolean end, String name)
+	Action(int num, Node n,boolean start, boolean end, String name)
 	{			
-	    num_action = num;
-	    this.num_node = num_node;
+	    this.num_action = num;
+	    this.n = n;
 	    this.start = start;
 	    this.end = end;
 	    value = name;
@@ -85,6 +85,10 @@ public class Action
 	{
 	    return (t);
 	}
+
+	public boolean getStart(){return start;}	
+	public boolean getEnd(){return end;}
+	public String getName(){return value;}
 	
 	public String toString()
 	{
