@@ -296,10 +296,15 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			System.out.println("2 => Node re-creat: " + coord.get(coord.size() - 1));
 			break;
 		    case 3:
-			System.out.println("TODO 3 => Trace suppr");
+			System.out.println("3 => Trace suppr");
 			delTrace(actions.get(id_hist).getTrace());
 			break;
-		    case 4:;break;
+		    case 4:
+			System.out.println("4 => Trace re-creat");
+			Trace t = actions.get(id_hist).getTrace(); 
+			trait_origin = t.getN1();
+			addTrace(t.getN2());
+			break;
 		    case 5:;break;
 		    case 6:;break;
 		    case 7:;break;
@@ -591,8 +596,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	if(!exist){
 	    trace.add(new Trace(trait_origin, n));
-	    actions.add(new Action(3, trace.size()-1, trace.get(trace.size()-1)));
-	    id_hist++;
 	    //System.out.println("new trace");
 	}
     }
@@ -703,7 +706,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	else if(suppr)
 	    {
-		delTrace(getTrace(e.getX(), e.getY() - 25));
+		Trace to_del = getTrace(e.getX(), e.getY() - 25);
+		delTrace(to_del);
+		actions.add(new Action(4, to_del));
+		id_hist++;
 		repaint();
 	    }
 	else if(edit == true && trait_origin != null && dist_mouse > 2)
@@ -715,6 +721,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	else if(trait_origin != null && edit == false)
 	    {
 		newTrait(getNode(e.getX(), e.getY() - 25));
+		actions.add(new Action(3, trace.get(trace.size()-1)));
+		id_hist++;
 		trait_origin = null;
 		repaint();
 	    }

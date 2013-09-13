@@ -38,7 +38,7 @@ public class Action
 	    this.n = n;
 	}
 	//3, 4
-	Action(int num, int num_trace, Trace t)
+	Action(int num, Trace t)
 	{			
 	    num_action = num;
 	    this.num_trace = num_trace;
