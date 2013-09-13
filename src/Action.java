@@ -81,6 +81,11 @@ public class Action
 	    return (n);
 	}
 
+	public Trace getTrace()
+	{
+	    return (t);
+	}
+	
 	public String toString()
 	{
 	    String return_str = "";

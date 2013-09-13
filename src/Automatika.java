@@ -1,7 +1,7 @@
  /**
    TODO:
    --- ACTIONS
-   1: actions class
+   1 : actions class
    2 : ctrl X
    3 : ctrl Y
    --- IMG
@@ -297,6 +297,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			break;
 		    case 3:
 			System.out.println("TODO 3 => Trace suppr");
+			delTrace(actions.get(id_hist).getTrace());
 			break;
 		    case 4:;break;
 		    case 5:;break;
@@ -495,7 +496,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	trait_origin.add_transition(n);
 	n.add_transition(trait_origin);
 	addTrace(n);
-	//System.out.println(trace.get(trace.size()-1));
 	//repaint();
     }
 
@@ -556,7 +556,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			if(trace.get(i) == t)
 			    {
 				trace.remove(i);
-				id_hist++;
 				//System.out.println("trace suppr");
 			    }
 		    }
