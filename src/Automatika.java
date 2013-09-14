@@ -300,7 +300,18 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			break;
 		    case 2:
 			coord.add(actions.get(id_hist).getNode());
+			
 			System.out.println("2 => Node re-creat: " + coord.get(coord.size() - 1));
+			System.out.println(actions.get(id_hist).getNode().transitions);
+			
+			trait_origin = a.getNode();
+			Iterator<Node> it_node = a.getNode().transitions.iterator();
+			Node s = null;
+			while(it_node.hasNext())
+			    {
+				s = it_node.next();
+				addTrace(s);
+			    }			
 			break;
 		    case 3:
 			System.out.println("3 => Trace suppr");
@@ -590,8 +601,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 				trace.remove(i);
 			    }
 		    }
-		//repaint();
-	      
 	    }
     }
 
