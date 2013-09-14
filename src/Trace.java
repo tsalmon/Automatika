@@ -46,6 +46,11 @@ public class Trace{
 	this.name = name;
     }
 
+    public String getName()
+    {
+	return (name);
+    }
+
     public boolean isLoop()
     {
 	return (n1 == n2);

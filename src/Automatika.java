@@ -311,6 +311,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			Trace t = actions.get(id_hist).getTrace(); 
 			trait_origin = t.getN1();
 			addTrace(t.getN2());
+			t.getN1().add_transition(t.getN2());
+			t.getN2().add_transition(t.getN1());
 			break;
 		    case 5:
 			System.out.println("5 => edit node");	
@@ -583,10 +585,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		t.getN2().suppr_transition(t.getN1());
 		for(int i = 0 ; i < trace.size(); i++)
 		    {
-			if(trace.get(i) == t)
+			if(trace.get(i).getN1() == t.getN1() && trace.get(i).getN2() == t.getN2())
 			    {
 				trace.remove(i);
-				//System.out.println("trace suppr");
 			    }
 		    }
 		//repaint();
@@ -725,7 +726,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		actions.add(new Action(2, to_del));	
 		delete(to_del);
 		id_hist++;
-		repaint();
 	    }
 	else if(suppr)
 	    {
@@ -733,7 +733,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		delTrace(to_del);
 		actions.add(new Action(4, to_del));
 		id_hist++;
-		repaint();
 	    }
 	else if(edit == true && trait_origin != null && dist_mouse > 2)
 	    {
@@ -741,7 +740,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		actions.add(new Action(7, trait_origin, trait_origin.x, trait_origin.y));
 		Move(e.getX(), e.getY() - 25);
 		id_hist++;
-		repaint();
 	    }
 	else if(trait_origin != null && edit == false)
 	    {
@@ -749,7 +747,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		actions.add(new Action(3, trace.get(trace.size()-1)));
 		id_hist++;
 		trait_origin = null;
-		repaint();
 	    }
 	else if(edit == false)
 	    {
@@ -759,16 +756,26 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		id_hist++;
 		coord.add(new Node(x, y, name));
 		actions.add(new Action(1, coord.get(coord.size() - 1), x, y));
-		repaint();
 	    }
+	repaint();
 	if(id_hist < actions.size() - 1)
 	    {
 		System.out.println("id_hist < actions.size(): " + id_hist + "\t" + actions.size());
+		/*
+		for(int i = id_hist; i < actions.size(); i++)
+		    {
+			actions.remove(i);
+		    }
+		System.out.println("liste actions : ");
+		for(int i = 0; i < actions.size(); i++)
+		    {
+			System.out.println(i + ": " +actions.get(i));
+		    }
+		*/
 	    }
-	
 	for(int i = 0; i < actions.size(); i++)
 	    {
-		System.out.println(i + ": " +actions.get(i));
+ 		System.out.println(((id_hist == i) ? "> ": "") + i + ": " +actions.get(i));
 	    }
 	System.out.println("--------------------------------------\n");
     }

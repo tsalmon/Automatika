@@ -21,7 +21,7 @@ public class Action
 	boolean start = false;
 	boolean end = false;
 	String value = null;
-	//1
+	//1, 7
 	Action(int num, Node n, int x, int y)
 	{
 	    num_action = num;
@@ -54,38 +54,18 @@ public class Action
 	    value = name;
 	}
 	//6 
-	Action(int num, String value)// last value
+	Action(int num, Trace t, String value)// last value
 	{
-	    num_action = num;
+	    this.num_action = num;
+	    this.t = t;
 	    this.value = value;
 	}
 	
-	//7
-	Action(int num, Node n,int x1, int y1, int x2, int y2)
-	{
-	    this.num_action  = num;
-	    this.n = n;
-	    old_pos_x = x1;
-	    old_pos_y = y1;
-	    new_pos_x = x2;
-	    new_pos_y = y2;	    
-	}
-		
-	public int getNum()
-	{
-	    return num_action;
-	}
-	
-	public Node getNode()
-	{
-	    return (n);
-	}
-
-	public Trace getTrace()
-	{
-	    return (t);
-	}
-
+	public int getOldX(){return old_pos_x;}
+	public int getOldY(){return old_pos_y;}
+	public int getNum(){return num_action;}
+	public Node getNode(){return (n);}
+	public Trace getTrace(){return (t);}
 	public boolean getStart(){return start;}	
 	public boolean getEnd(){return end;}
 	public String getName(){return value;}
