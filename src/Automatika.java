@@ -299,11 +299,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			delete(actions.get(id_hist).getNode());
 			break;
 		    case 2:
+			System.out.println("2 => Node re-creat");
 			coord.add(actions.get(id_hist).getNode());
-			
-			System.out.println("2 => Node re-creat: " + coord.get(coord.size() - 1));
-			System.out.println(actions.get(id_hist).getNode().transitions);
-			
 			trait_origin = a.getNode();
 			Iterator<Node> it_node = a.getNode().transitions.iterator();
 			Node s = null;
@@ -769,24 +766,25 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	repaint();
 	if(id_hist < actions.size() - 1)
 	    {
-		System.out.println("id_hist < actions.size(): " + id_hist + "\t" + actions.size());
-		/*
-		for(int i = id_hist; i < actions.size(); i++)
+		for(int i = id_hist; id_hist+1 < actions.size(); i++)
 		    {
-			actions.remove(i);
+			actions.remove(id_hist);
 		    }
 		System.out.println("liste actions : ");
 		for(int i = 0; i < actions.size(); i++)
 		    {
 			System.out.println(i + ": " +actions.get(i));
 		    }
-		*/
+		System.out.println("--------------------------------------\n");
 	    }
-	for(int i = 0; i < actions.size(); i++)
+	else
 	    {
- 		System.out.println(((id_hist == i) ? "> ": "") + i + ": " +actions.get(i));
+		for(int i = 0; i < actions.size(); i++)
+		    {
+			System.out.println(((id_hist == i) ? "> ": "") + i + ": " +actions.get(i));
+		    }
+		System.out.println("--------------------------------------\n");
 	    }
-	System.out.println("--------------------------------------\n");
     }
     
     public void mousePressed(MouseEvent e){
