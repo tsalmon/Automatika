@@ -18,17 +18,23 @@ public class Action
 	int new_pos_y;
 	Node n = null; 
 	Trace t = null;
-	boolean start = false;
-	boolean end = false;
-	String value = null;
+	boolean last_start = false;
+	boolean last_end = false;
+	String last_value = null;
+	boolean new_start = false;
+	boolean new_end = false;
+	String new_value = null;
+
 	//1, 7
-	Action(int num, Node n, int x, int y)
+	Action(int num, Node n, int old_x, int old_y, int new_x, int new_y)
 	{
 	    num_action = num;
 	    this.num_node = num_node;
 	    this.n = n;
-	    this.old_pos_x = x;
-	    this.old_pos_y = y;
+	    this.old_pos_x = old_x;
+	    this.old_pos_y = old_y;
+	    this.new_pos_x = new_x;
+	    this.new_pos_y = new_y;
 	}
 	// 2
 	Action(int num, Node n)
@@ -45,30 +51,41 @@ public class Action
 	    this.t = t;
 	}
 	//5
-	Action(int num, Node n,boolean start, boolean end, String name)
+	Action(int num, Node n,
+	       boolean last_start, boolean last_end, String last_name, 
+	       boolean new_start, boolean new_end, String new_name)
 	{			
 	    this.num_action = num;
 	    this.n = n;
-	    this.start = start;
-	    this.end = end;
-	    value = name;
+	    this.last_start = last_start;
+	    this.last_end = last_end;
+	    this.last_value = last_name;
+	    this.new_start = new_start;
+	    this.new_end = new_end;
+	    this.new_value = new_name;
 	}
 	//6 
-	Action(int num, Trace t, String value)// last value
+	Action(int num, Trace t, String last_value, String new_value)// last value
 	{
 	    this.num_action = num;
 	    this.t = t;
-	    this.value = value;
+	    this.last_value = last_value;
+	    this.new_value = new_value;
 	}
 	
 	public int getOldX(){return old_pos_x;}
 	public int getOldY(){return old_pos_y;}
+	public int getNewX(){return new_pos_x;}
+	public int getNewY(){return new_pos_y;}
 	public int getNum(){return num_action;}
 	public Node getNode(){return (n);}
 	public Trace getTrace(){return (t);}
-	public boolean getStart(){return start;}	
-	public boolean getEnd(){return end;}
-	public String getName(){return value;}
+	public boolean getOldStart(){return last_start;}	
+	public boolean getOldEnd(){return last_end;}
+	public String getOldName(){return last_value;}
+	public boolean getNewStart(){return new_start;}	
+	public boolean getNewEnd(){return new_end;}
+	public String getNewName(){return new_value;}
 	
 	public String toString()
 	{
@@ -79,7 +96,7 @@ public class Action
 		case 2: return_str = "node  suppr " + n; break;
 		case 3: return_str = "trace creat " + t; break;
 		case 4: return_str = "trace suppr " + t; break;
-		case 5: return_str = "node  edit  " + n + " s:" + start + ", " + "e:" + end + ", " + "v:" + value; break;
+		case 5: return_str = "node  edit  " + n + " Ls:" + last_start + ", " + "Le:" + last_end + ", " + "Lv:" + last_value; break;
 		case 6: return_str = "trace edit  " + t; break;
 		case 7: return_str = "node  move  " + n + " (" + old_pos_x + ", " + old_pos_y + ")"; break; 
 		}

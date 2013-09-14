@@ -166,13 +166,15 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    id_hist++;
 		    if(is_node)
 			{
-			    actions.add(new Action(5, coord.get(num), coord.get(num).getStart(), coord.get(num).getEnd(), coord.get(num).getName()));
-			    
+			    actions.add(new Action(5, coord.get(num), 
+						   coord.get(num).getStart(), coord.get(num).getEnd(), coord.get(num).getName(),
+						   start.isSelected(), end.isSelected(), txt.getText())
+					);
 			    edit_node();
 			}
 		    else
 			{
-			    actions.add(new Action(6, trace.get(num), trace.get(num).getName()));
+			    actions.add(new Action(6, trace.get(num), trace.get(num).getName(), txt.getText()));
 			    edit_line();
 			}
 		    setVisible(false);
@@ -295,11 +297,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		switch(actions.get(id_hist).getNum())
 		    {
 		    case 1:
-			System.out.println("1 => Node suppr");
 			delete(actions.get(id_hist).getNode());
 			break;
 		    case 2:
-			System.out.println("2 => Node re-creat");
 			coord.add(actions.get(id_hist).getNode());
 			trait_origin = a.getNode();
 			Iterator<Node> it_node = a.getNode().transitions.iterator();
@@ -311,11 +311,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    }			
 			break;
 		    case 3:
-			System.out.println("3 => Trace suppr");
 			delTrace(actions.get(id_hist).getTrace());
 			break;
 		    case 4:
-			System.out.println("4 => Trace re-creat");
 			Trace t = actions.get(id_hist).getTrace(); 
 			trait_origin = t.getN1();
 			addTrace(t.getN2());
@@ -323,22 +321,16 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			t.getN2().add_transition(t.getN1());
 			break;
 		    case 5:
-			System.out.println("5 => edit node");	
-			a.getNode().setStart(a.getStart());
-			a.getNode().setEnd(a.getEnd());
-			a.getNode().setName(a.getName());
+			a.getNode().setStart(a.getOldStart());
+			a.getNode().setEnd(a.getOldEnd());
+			a.getNode().setName(a.getOldName());
 			break;
 		    case 6:
-			System.out.println("6 => edit trace");
-			actions.get(id_hist).getTrace().setName(actions.get(id_hist).getName());
+			actions.get(id_hist).getTrace().setName(actions.get(id_hist).getOldName());
 			break;
 		    case 7:
-			System.out.println("7 => move");
-			//Action a = actions.get(id_hist);
 			trait_origin = a.getNode();
-			System.out.println(trait_origin);
 			Move(a.getOldX(), a.getOldY());
-			System.out.println(trait_origin);
 			repaint();
 			break;
 		    default:
@@ -350,19 +342,38 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     
     public void ctrl_y()
     {
-	if(id_hist < actions.size())
+	if(id_hist < actions.size()-1)
 	    {
-		switch(actions.get(id_hist).getNum())
-		{
-		case 1:break;
-		case 2:break;
-		case 3:break;
-		case 4:break;
-		case 5:break;
-		case 6:break;
-		case 7:break;
-		}
 		id_hist++;
+		Action a = actions.get(id_hist);
+		switch(a.getNum())
+		{
+		case 1:
+		    coord.add(a.getNode());
+		    break;
+		case 2:
+		    delete(a.getNode());
+		    break;
+		case 3:
+		    trace.add(a.getTrace());
+		    break;
+		case 4:
+		    delTrace(a.getTrace());
+		    break;
+		case 5:
+		    a.getNode().setStart(a.getNewStart());
+		    a.getNode().setEnd(a.getNewEnd());
+		    a.getNode().setName(a.getNewName());
+		    break;
+		case 6:
+		    actions.get(id_hist).getTrace().setName(actions.get(id_hist).getNewName());
+		    break;
+		case 7:
+		    trait_origin = a.getNode();
+		    Move(a.getNewX(), a.getNewY());
+		    repaint();
+		    break;
+		}
 	    }
     }
 
@@ -557,26 +568,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		s = it_node.next();
 		g.drawLine(coord.get(i).x, coord.get(i).y, s.x, s.y);
 		for(int j = 0; j < trace.size(); j++)
-		    {
-			/*
-			x1 = trace.get(j).getX1();
-			x2 = trace.get(j).getX2();
-			y1 = trace.get(j).getY1();
-			y2 = trace.get(j).getY2();
-			if((x1 == coord.get(i).x && y1 == coord.get(i).y && x2 == s.x && y2 == s.y) || (x1 == s.x && y1 == s.y && x2 == coord.get(i).x && y2 == coord.get(i).y))
-			    {
-				trace.remove(j);
-			    }
-			*/
-			if(trace.get(j).getN1() == n || trace.get(j).getN2() == n)
-			    {
-				trace.remove(j);				
-				//System.out.println("trace suppr");
-			    }
-		    }
+		    if(trace.get(j).getN1() == n || trace.get(j).getN2() == n)
+			trace.remove(j);				
 	    }
 	coord.remove(i);
-	//repaint();
 	return;
     }
 
@@ -585,7 +580,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(t == null){return ;}
 	if(t.getN1() == t.getN2())
 	    {
-		//System.out.println("not yet, todo");
+		System.out.println("not yet, todo");
 	    }
 	else
 	    {
@@ -607,18 +602,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	int x1, x2, y1, y2;
 	for(int k = 0; k < trace.size(); k++)
 	    {
-		/*
-		x1 = trace.get(k).getX1();
-		x2 = trace.get(k).getX2();
-		y1 = trace.get(k).getY1();
-		y2 = trace.get(k).getY2();
-		if((x1 == x_1 && x2 == x_2 && y1 == y_1 && y2 == y_2) || 
-		   (x1 == x_2 && x2 == x_1 && y1 == y_2 && y2 == y_1))
-		    {
-			exist = true;
-			break;
-		    }
-		*/
 		if((trace.get(k).getN1() == trait_origin && trace.get(k).getN2() == n) ||
 		   (trace.get(k).getN1() == n && trace.get(k).getN2() == trait_origin))
 		    {
@@ -628,7 +611,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	if(!exist){
 	    trace.add(new Trace(trait_origin, n));
-	    //System.out.println("new trace");
 	}
     }
 
@@ -643,44 +625,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	Node n = null;
 	int old_x = trait_origin.x;
 	int old_y = trait_origin.y;
-	//System.out.println("move : (" + old_x + ", " + old_y + ") =>" + " (" + x + ", " + y + ")");
 	newNode(x, y, trait_origin.name);	
 	g.setColor(draw_surface.getBackground());
 	trait_origin.x = x;
 	trait_origin.y = y;
-	/*
-	  g.drawOval(old_x-25, old_y-25, 50, 50);
-	  g.fillOval(old_x-25, old_y-25, 50, 50);
-	  while(it.hasNext())
-	  {
-	  g.setColor(draw_surface.getBackground());
-	  n = it.next();
-	  //deleting phase
-	  /*
-	  for(int i = 0; i < trace.size(); i++)
-	  {
-	  int x1 = trace.get(i).getX1(), 
-	  x2 = trace.get(i).getX2(), 
-	  y1 = trace.get(i).getY1(), 
-	  y2 = trace.get(i).getY2();
-	  Node t = getNode(n.x, n.y);
-	  if(t != null && ((x1 == old_x && x2 == t.x && y1 == old_y && y2 == t.y) || (x1 == t.x && x2 == old_x && y1 == t.y && y2 == old_y)))
-	  {
-	  trace.set(i, new Trace(trait_origin.x,trait_origin.y, n.x, n.y));
-	  break;
-	  }
-	  }
-	  
-	  g.drawLine(old_x,old_y, n.x, n.y);
-	  g.drawOval(n.x-25, n.y-25, 50, 50);
-	  //add phase
-	  //System.out.println(trait_origin.name);
-	  g.setColor(Color.BLACK);	
-	  newTrait(getNode(n.x, n.y));
-	  //System.out.println(n);
-	  }
-	*/
-	//repaint();
     }
 
     /***************************
@@ -695,7 +643,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     public void keyPressed(KeyEvent e){
 	if(e.isControlDown()) edit = true;
 	if(e.getKeyCode() == KeyEvent.VK_Z && edit){repaint(); ctrl_z(); repaint();}
-	if(e.getKeyCode() == KeyEvent.VK_Y && edit){System.out.println("ctrl_y();");}
+	if(e.getKeyCode() == KeyEvent.VK_Y && edit){repaint();ctrl_y(); repaint();}
 	if(e.getKeyCode() == KeyEvent.VK_O && edit){System.out.println("open file");}
 	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
 	if(e.getKeyCode() == KeyEvent.VK_DELETE){suppr=true;}
@@ -742,8 +690,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	else if(edit == true && trait_origin != null && dist_mouse > 2)
 	    {
-		//System.out.println(dist_mouse);
-		actions.add(new Action(7, trait_origin, trait_origin.x, trait_origin.y));
+		actions.add(new Action(7, trait_origin, trait_origin.x, trait_origin.y, e.getX(), e.getY() - 25));
 		Move(e.getX(), e.getY() - 25);
 		id_hist++;
 	    }
@@ -761,7 +708,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		newNode(x, y, name);
 		id_hist++;
 		coord.add(new Node(x, y, name));
-		actions.add(new Action(1, coord.get(coord.size() - 1), x, y));
+		actions.add(new Action(1, coord.get(coord.size() - 1), x, y, x, y));
 	    }
 	repaint();
 	if(id_hist < actions.size() - 1)
