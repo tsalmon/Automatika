@@ -1,9 +1,5 @@
  /**
    TODO:
-   --- ACTIONS
-   1 : actions class
-   2 : ctrl X
-   3 : ctrl Y
    --- IMG
    4 : save to (API)
    5 : save
@@ -34,6 +30,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.FileDialog;
 //import java.awt.Event;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
@@ -217,25 +214,32 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
 		    }
 		if(coord.get(i).isStart())
-		   {
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
-		       g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
+		    {
+			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
+			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
+			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
 		   }
 		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
 	    }
-	JFileChooser fc = new JFileChooser();
-	int returnVal = fc.showSaveDialog(this);
-	if (returnVal == JFileChooser.APPROVE_OPTION) {
-	    try{
-		File file = fc.getSelectedFile();
-		ImageIO.write(bi, "png", new File(file.getName() + ".png"));
+	FileDialog fc = new FileDialog(this, "Choose a file", FileDialog.SAVE);
+	fc.setDirectory("c://");
+	fc.setVisible(true);
+	String fn = fc.getFile();
+	if(fn == null)
+	    {
+		System.out.println("cancel");
 	    }
-	    catch(IOException ioe)
-		{
-		    ioe.printStackTrace();
+	else
+	    {
+		try{
+		    ImageIO.write(bi, "png", new File(fn + ".png"));
 		}
-	}
+		catch(IOException ioe)
+		    {
+			ioe.printStackTrace();
+		    }
+	    }
+	fc.setVisible(false);
     }
 
     public int dist(int x1, int y1, int x2, int y2)
