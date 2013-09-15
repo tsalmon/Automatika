@@ -1,13 +1,12 @@
  /**
    TODO:
    --- IMG
-   1 : save
-   2 : save as jpg
+   1 : save as jpg
    --- IMPRESSION
-   3 : API Windows
-   4 : API Linux
+   2 : API Windows
+   3 : API Linux
    --- automaton
-   5: double trace
+   4: double trace
 **/
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -15,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.io.File;
 import java.io.IOException;
+import java.io.FilenameFilter;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JFileChooser;
@@ -220,7 +220,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		   }
 		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
 	    }
-	FileDialog fc = new FileDialog(this, "Choose a file", FileDialog.SAVE);
+	FileDialog fc = new FileDialog(this, "Save", FileDialog.SAVE);
+	
 	fc.setDirectory("c://");
 	fc.setVisible(true);
 	String fn = fc.getFile();
