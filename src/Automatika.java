@@ -1,14 +1,13 @@
  /**
    TODO:
    --- IMG
-   4 : save to (API)
-   5 : save
-   6 : save as jpg
+   1 : save
+   2 : save as jpg
    --- IMPRESSION
-   7 : API Windows
-   8 : API Linux
+   3 : API Windows
+   4 : API Linux
    --- automaton
-   9: double trace
+   5: double trace
 **/
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -201,7 +200,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    y1 = trace.get(i).getY1(),
 		    x2 = trace.get(i).getX2(),
 		    y2 = trace.get(i).getY2();
-		draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
+		g.drawLine(x1, y1, x2, y2);
 	    }
 	for(int i = 0; i < coord.size(); i++)
 	    {
