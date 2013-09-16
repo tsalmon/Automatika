@@ -1,12 +1,10 @@
  /**
    TODO:
-   --- IMG
-   1 : save as jpg
    --- IMPRESSION
-   2 : API Windows
-   3 : API Linux
+   1 : API Windows
+   2 : API Linux
    --- automaton
-   4: double trace
+   3: double trace
 **/
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -221,7 +219,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
 	    }
 	FileDialog fc = new FileDialog(this, "Save", FileDialog.SAVE);
-	
+	fc.setFile("untitled.png");	
 	fc.setDirectory("c://");
 	fc.setVisible(true);
 	String fn = fc.getFile();
