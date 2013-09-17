@@ -12,6 +12,10 @@ import java.util.Set;
 import java.io.File;
 import java.io.IOException;
 import java.io.FilenameFilter;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.FileReader;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JFileChooser;
@@ -27,7 +31,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.FileDialog;
-//import java.awt.Event;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -198,6 +201,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    x2 = trace.get(i).getX2(),
 		    y2 = trace.get(i).getY2();
 		g.drawLine(x1, y1, x2, y2);
+		if(dist(x1, y1, x2, y2) > 80)
+		    g.drawString(trace.get(i).name, (x1+x2)/2, (y1+y2)/2);
+			
 	    }
 	for(int i = 0; i < coord.size(); i++)
 	    {
@@ -214,7 +220,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
 			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
 			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
-		   }
+		    }
 		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
 	    }
 	FileDialog fc = new FileDialog(this, "Save", FileDialog.SAVE);
@@ -229,16 +235,73 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	else
 	    {
 		try{
-		    ImageIO.write(bi, "png", new File(fn + ".png"));
+		    ImageIO.write(bi, "png", new File(fn));
 		}
 		catch(IOException ioe)
 		    {
 			ioe.printStackTrace();
 		    }
 	    }
-	fc.setVisible(false);
+	fc.setVisible(false);	
+	write_graph(fn);
     }
-
+    
+    public void write_graph(String nomFic)
+    {
+	String adressedufichier = System.getProperty("user.dir") + "/"+ nomFic+".gh";
+	String str = "graph " + nomFic + "\n";
+	for(int i = 0; i < trace.size(); i++)
+	    str += trace.get(i).getN1().getName() + " - " + trace.get(i).getN2().getName() + " (" + trace.get(i).getName() + ")\n";
+	System.out.println(str);
+	try{
+	    FileWriter fw = new FileWriter(adressedufichier, true);
+	    BufferedWriter output = new BufferedWriter(fw);
+	    output.write(str);
+	    output.flush();
+	    output.close();
+	}
+	catch(IOException ioe){ioe.printStackTrace();}
+    }
+    
+    public void open_graph()
+    {
+	FileDialog fc = new FileDialog(this, "Open", FileDialog.LOAD);
+	fc.setFile("untitled.png");	
+	fc.setDirectory("c://");
+	fc.setVisible(true);
+	String fn = fc.getFile();
+	if(fn == null)
+	    {
+		System.out.println("cancel");
+	    }
+	else
+	    {
+		System.out.println(fc.getFile());
+		BufferedReader br = null;
+		FileReader fr = null;
+		try {
+		    fr = new FileReader(fc.getFile());
+		    br = new BufferedReader(fr);
+		    String line;
+		    int lineNo = 0;
+		    while ((line = br.readLine()) != null) {
+			System.out.println(line);
+		    }
+		}
+		catch (Exception x) {
+		    x.printStackTrace();
+		}
+		finally {
+		    if (fr != null) {
+			try {br.close();} catch (Exception ignoreMe) {}
+			try {fr.close();} catch (Exception ignoreMe) {}
+		    }
+		}
+	    }
+	fc.setVisible(false);	
+	//write_graph(fn);	
+    }
+    
     public int dist(int x1, int y1, int x2, int y2)
     {
 	return (int)(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
@@ -645,7 +708,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(e.isControlDown()) edit = true;
 	if(e.getKeyCode() == KeyEvent.VK_Z && edit){repaint(); ctrl_z(); repaint();}
 	if(e.getKeyCode() == KeyEvent.VK_Y && edit){repaint();ctrl_y(); repaint();}
-	if(e.getKeyCode() == KeyEvent.VK_O && edit){/*System.out.println("open file");*/}
+	if(e.getKeyCode() == KeyEvent.VK_O && edit){open_graph();}
 	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
 	if(e.getKeyCode() == KeyEvent.VK_DELETE){suppr=true;}
     }
