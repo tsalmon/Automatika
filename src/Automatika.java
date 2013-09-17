@@ -1,8 +1,7 @@
  /**
    TODO:
-   --- IMPRESSION
-   1 : API Windows
-   2 : API Linux
+   --- OUT
+   1 : create txt
    --- automaton
    3: double trace
 **/
@@ -149,7 +148,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	public void edit_line()//TODO: complete
 	{
 	    trace.get(num).setName(txt.getText());
-	    System.out.println("edit trace");
+	    //System.out.println("edit trace");
 	}
 	
 	public void actionPerformed(ActionEvent e)
@@ -225,7 +224,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	String fn = fc.getFile();
 	if(fn == null)
 	    {
-		System.out.println("cancel");
+		//System.out.println("cancel");
 	    }
 	else
 	    {
@@ -336,7 +335,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			repaint();
 			break;
 		    default:
-			System.out.println("error");
+			//System.out.println("error");
 		    }
 		id_hist--;
 	    }
@@ -582,20 +581,20 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(t == null){return ;}
 	if(t.getN1() == t.getN2())
 	    {
-		System.out.println("not yet, todo");
+		t.getN1().suppr_transition(t.getN1());
 	    }
 	else
 	    {
 		t.getN1().suppr_transition(t.getN2());
 		t.getN2().suppr_transition(t.getN1());
-		for(int i = 0 ; i < trace.size(); i++)
-		    {
-			if(trace.get(i).getN1() == t.getN1() && trace.get(i).getN2() == t.getN2())
-			    {
-				trace.remove(i);
-			    }
-		    }
 	    }
+	for(int i = 0 ; i < trace.size(); i++)
+	    {
+		if(trace.get(i).getN1() == t.getN1() && trace.get(i).getN2() == t.getN2())
+		    {
+			trace.remove(i);
+		    }
+	    }		
     }
 
     public void addTrace(Node n)
@@ -646,7 +645,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(e.isControlDown()) edit = true;
 	if(e.getKeyCode() == KeyEvent.VK_Z && edit){repaint(); ctrl_z(); repaint();}
 	if(e.getKeyCode() == KeyEvent.VK_Y && edit){repaint();ctrl_y(); repaint();}
-	if(e.getKeyCode() == KeyEvent.VK_O && edit){System.out.println("open file");}
+	if(e.getKeyCode() == KeyEvent.VK_O && edit){/*System.out.println("open file");*/}
 	if(e.getKeyCode() == KeyEvent.VK_S && edit){Save();}
 	if(e.getKeyCode() == KeyEvent.VK_DELETE){suppr=true;}
     }
@@ -719,20 +718,23 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    {
 			actions.remove(id_hist);
 		    }
-		System.out.println("liste actions : ");
+		/*System.out.println("liste actions : ");
 		for(int i = 0; i < actions.size(); i++)
 		    {
 			System.out.println(i + ": " +actions.get(i));
 		    }
 		System.out.println("--------------------------------------\n");
+		*/
 	    }
 	else
 	    {
+		/*
 		for(int i = 0; i < actions.size(); i++)
 		    {
 			System.out.println(((id_hist == i) ? "> ": "") + i + ": " +actions.get(i));
 		    }
 		System.out.println("--------------------------------------\n");
+		*/
 	    }
     }
     
