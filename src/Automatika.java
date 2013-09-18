@@ -304,9 +304,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    while ((line = br.readLine()) != null) 
 			{
 			    str_split = line.split(" ");
-			    
+			    trace.add(new Trace(getNodeByName(str_split[0]), getNodeByName(str_split[2])));
+			    trace.get(trace.size() - 1).setName(str_split[3].substring(1, str_split[3].length() - 1));
 			    //System.out.println("N1: " + str_split[0] + ", N2: " + str_split[2] + " str: " + str_split[3].substring(1, str_split[3].length() - 1));			    
 			}
+		    repaint();
 		}
 		catch (Exception x) {
 		    x.printStackTrace();
