@@ -1,9 +1,9 @@
- /**
+/**
    TODO:
    --- OUT
    1 : create txt
    --- automaton
-   3: double trace
+   2: double trace
 **/
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -243,15 +243,18 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    }
 	    }
 	fc.setVisible(false);	
-	write_graph(fn);
+	write_graph(fn.substring(0, fn.length() - 4));
     }
     
     public void write_graph(String nomFic)
     {
-	String adressedufichier = System.getProperty("user.dir") + "/"+ nomFic+".gh";
+	String adressedufichier = System.getProperty("user.dir") + "/"+ nomFic+".atk";
 	String str = "graph " + nomFic + "\n";
 	for(int i = 0; i < trace.size(); i++)
 	    str += trace.get(i).getN1().getName() + " - " + trace.get(i).getN2().getName() + " (" + trace.get(i).getName() + ")\n";
+	str += "\n";
+	for(int i = 0; i < coord.size(); i++)
+	    str += coord.get(i).getName() + " " + coord.get(i).getX() + "," + coord.get(i).getY() + "\n";
 	System.out.println(str);
 	try{
 	    FileWriter fw = new FileWriter(adressedufichier, true);
@@ -284,6 +287,12 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    br = new BufferedReader(fr);
 		    String line;
 		    int lineNo = 0;
+		    /*
+		    if((line = br.readLine()) != null)
+			{
+			    line.s
+			}
+		    */
 		    while ((line = br.readLine()) != null) {
 			System.out.println(line);
 		    }

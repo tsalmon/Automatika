@@ -15,7 +15,17 @@ public class Node
 	y = b;
 	name = n;
     }
+
+    public int getX()
+    {
+	return x;
+    }
     
+    public int getY()
+    {
+	return y;
+    }
+
     public void add_transition(Node q)
     {
 	transitions.add(q);
