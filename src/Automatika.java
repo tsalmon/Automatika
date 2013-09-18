@@ -16,6 +16,7 @@ import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.RandomAccessFile;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JFileChooser;
@@ -250,14 +251,14 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     {
 	String adressedufichier = System.getProperty("user.dir") + "/"+ nomFic+".atk";
 	String str = "graph " + nomFic + "\n";
-	for(int i = 0; i < trace.size(); i++)
-	    str += trace.get(i).getN1().getName() + " - " + trace.get(i).getN2().getName() + " (" + trace.get(i).getName() + ")\n";
-	str += "\n";
 	for(int i = 0; i < coord.size(); i++)
 	    str += coord.get(i).getName() + " " + coord.get(i).getX() + "," + coord.get(i).getY() + "\n";
-	System.out.println(str);
+	str += "\n";
+	for(int i = 0; i < trace.size(); i++)
+	    str += trace.get(i).getN1().getName() + " - " + trace.get(i).getN2().getName() + " (" + trace.get(i).getName() + ")\n";
 	try{
-	    FileWriter fw = new FileWriter(adressedufichier, true);
+	    new RandomAccessFile(nomFic+".atk", "rw").setLength(0); // clear content
+	    FileWriter fw = new FileWriter(adressedufichier, true); 
 	    BufferedWriter output = new BufferedWriter(fw);
 	    output.write(str);
 	    output.flush();
@@ -279,23 +280,33 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	else
 	    {
-		System.out.println(fc.getFile());
 		BufferedReader br = null;
 		FileReader fr = null;
 		try {
 		    fr = new FileReader(fc.getFile());
 		    br = new BufferedReader(fr);
 		    String line;
+		    String [] str_split;
+		    String [] str_pos;
 		    int lineNo = 0;
-		    /*
-		    if((line = br.readLine()) != null)
+		    if((line = br.readLine()) == null || !line.split(" ")[0].equals("graph"))
 			{
-			    line.s
+			    System.out.println("not graph");
+			    return ;
 			}
-		    */
-		    while ((line = br.readLine()) != null) {
-			System.out.println(line);
-		    }
+		    while(((line = br.readLine()) != null) && line.length() != 0) 
+			{
+			    str_split = line.split(" ");
+			    str_pos   = str_split[1].split(",");
+			    //System.out.println("nom : " + str_split[0] + " (" + str_pos[0] + "," + str_pos[1] + ")");
+			    coord.add(new Node(Integer.parseInt(str_pos[0]), Integer.parseInt(str_pos[1]), str_split[0]));
+			}
+		    while ((line = br.readLine()) != null) 
+			{
+			    str_split = line.split(" ");
+			    
+			    //System.out.println("N1: " + str_split[0] + ", N2: " + str_split[2] + " str: " + str_split[3].substring(1, str_split[3].length() - 1));			    
+			}
 		}
 		catch (Exception x) {
 		    x.printStackTrace();
@@ -581,6 +592,15 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	return -1;
     }
 
+    public Node getNodeByName(String name)
+    {
+	for(int i = 0 ; i < coord.size(); i++)
+	    {
+		if(name.equals(coord.get(i).getName()))
+		    return coord.get(i);
+	    }
+	return null;
+    }
 
     /***************************
      *---     ACTIONS       ---*
