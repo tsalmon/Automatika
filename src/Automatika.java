@@ -509,10 +509,12 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			y1 = trace.get(i).getY2() - trace.get(i).getY1();
 			x2 = click_x - trace.get(i).getX1();
 			y2 = click_y - trace.get(i).getY1();
-			if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
+			/*if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
 			   isBetween(trace.get(i).getX1(), click_x,trace.get(i).getX2()) && 
 			   isBetween(trace.get(i).getY1(), click_y,trace.get(i).getY2())
 			   )
+			*/
+			if(isBetween(-2000,x1*y2 - y1*x2,2000))
 			    return trace.get(i);
 		    }
 	    }
@@ -526,7 +528,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     public int getNumTrace(int click_x, int click_y)
     {
 	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-	//System.out.println(click_x + ", " + click_y);
+	System.out.println(click_x + ", " + click_y);
 	for(int i = 0; i < trace.size(); i++)
 	    {
 		if(trace.get(i).isLoop() && 
@@ -543,9 +545,13 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			y1 = trace.get(i).getY2() - trace.get(i).getY1();
 			x2 = click_x - trace.get(i).getX1();
 			y2 = click_y - trace.get(i).getY1();
+			/*
 			if(isBetween(-2000,x1*y2 - y1*x2,2000) && 
 			   isBetween(trace.get(i).getX1(), click_x,trace.get(i).getX2()) && 
 			   isBetween(trace.get(i).getY1(), click_y,trace.get(i).getY2()))
+			    return i;
+			*/
+			if(isBetween(-2000,x1*y2 - y1*x2,2000))
 			    return i;
 		    }
 	    }
