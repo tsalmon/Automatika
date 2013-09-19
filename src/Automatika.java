@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.RandomAccessFile;
 import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -74,6 +75,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	this.addMouseListener(this);
 	this.addKeyListener(this);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
+	setLocationRelativeTo(null);
 	setVisible(true);
     }
 
@@ -106,6 +108,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    else
 		line();
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
+	    setLocationRelativeTo(null);
 	    setVisible(true);
 	}
 
@@ -174,6 +177,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    actions.add(new Action(6, trace.get(num), trace.get(num).getName(), txt.getText()));
 			    edit_line();
 			}
+		    edit = false;
 		    setVisible(false);
 		    repaint();
 		}
@@ -750,9 +754,19 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(e.getKeyCode() == KeyEvent.VK_DELETE){suppr=true;}
     }
 
+    public boolean clickG(MouseEvent e)
+    {
+	return (SwingUtilities.isLeftMouseButton(e));
+    }
+
+    public boolean clickD(MouseEvent e)
+    {
+	return (SwingUtilities.isRightMouseButton(e));
+    }
+    
     public void mouseClicked(MouseEvent e)
     {
-	if(e.getClickCount() == 2 && edit == true)
+	if(e.getClickCount() == 2 && edit == true && clickG(e))
 	    {
 		int num_trace = getNumTrace(e.getX(), e.getY() - 25);
 	        int num_node  = getNumNode(e.getX(), e.getY() - 25);
@@ -766,8 +780,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			new Edit(true, num_node);
 	    }
     }
-
-
+    
     public void mouseReleased(MouseEvent e)
     {
 	int dist_mouse = dist(mousePressed_x, mousePressed_y, e.getX(), e.getY()-25);
@@ -775,34 +788,38 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    {
 		return;
 	    }	
-	if(suppr == true && trait_origin != null)
+	if(suppr == true && trait_origin != null && clickG(e))
 	    {
+		System.out.println("toto");
 		Node to_del = getNode(e.getX(), e.getY() - 25);
 		actions.add(new Action(2, to_del));	
 		delete(to_del);
 		id_hist++;
 	    }
-	else if(suppr)
+	else if(suppr && clickG(e))
 	    {
 		Trace to_del = getTrace(e.getX(), e.getY() - 25);
 		delTrace(to_del);
 		actions.add(new Action(4, to_del));
 		id_hist++;
 	    }
-	else if(edit == true && trait_origin != null && dist_mouse > 2)
+	else if(edit == true && trait_origin != null && dist_mouse > 2 && clickG(e))
 	    {
 		actions.add(new Action(7, trait_origin, trait_origin.x, trait_origin.y, e.getX(), e.getY() - 25));
 		Move(e.getX(), e.getY() - 25);
 		id_hist++;
 	    }
-	else if(trait_origin != null && edit == false)
+	else if(trait_origin != null && edit == false && clickG(e))
 	    {
-		newTrait(getNode(e.getX(), e.getY() - 25));
+		Node get_Node = getNode(e.getX(), e.getY() - 25);
+		if(get_Node == null)
+		    return;
+		newTrait(get_Node);
 		actions.add(new Action(3, trace.get(trace.size()-1)));
 		id_hist++;
 		trait_origin = null;
 	    }
-	else if(edit == false)
+	else if(edit == false && clickG(e))
 	    {
 		String name = "q" + indice++;
 		int x = e.getX(), y = e.getY() - 25;
@@ -813,30 +830,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	repaint();
 	if(id_hist < actions.size() - 1)
-	    {
-		for(int i = id_hist; id_hist+1 < actions.size(); i++)
-		    {
-			actions.remove(id_hist);
-		    }
-		/*System.out.println("liste actions : ");
-		for(int i = 0; i < actions.size(); i++)
-		    {
-			System.out.println(i + ": " +actions.get(i));
-		    }
-		System.out.println("--------------------------------------\n");
-		*/
-	    }
-	else
-	    {
-		/*
-		for(int i = 0; i < actions.size(); i++)
-		    {
-			System.out.println(((id_hist == i) ? "> ": "") + i + ": " +actions.get(i));
-		    }
-		System.out.println("--------------------------------------\n");
-		*/
-	    }
+	    for(int i = id_hist; id_hist+1 < actions.size(); i++)
+		actions.remove(id_hist);
     }
+    
     
     public void mousePressed(MouseEvent e){
 	mousePressed_x = e.getX();
