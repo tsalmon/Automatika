@@ -86,7 +86,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    System.out.println("Selected: " + event.getActionCommand());
 		}
 	    };
-	PopupMenuListener pListener = new PopupMenuListener() {
+	PopupMenuListener pListener = new PopupMenuListener(){
+		class Test()
+		{
+		}
 		public void popupMenuCanceled(PopupMenuEvent event) {
 		    System.out.println("cancel");
 		}
@@ -113,7 +116,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	submenu.add(new JMenuItem("a1"));
 	popupMenu.add(submenu);
 	//--------------
-
+	
 	this.addMouseListener(this);
 	this.addKeyListener(this);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
