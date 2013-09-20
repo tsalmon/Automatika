@@ -89,16 +89,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		}
 	    };
 	PopupMenuListener pListener = new PopupMenuListener(){
-		public void popupMenuCanceled(PopupMenuEvent event) {
-		    System.out.println("cancel");
-		}
-		public void popupMenuWillBecomeInvisible(PopupMenuEvent event) {
-		    System.out.println("end");
-		}
-		public void popupMenuWillBecomeVisible(PopupMenuEvent event) {
-		    System.out.println("start");
-		}
-	    };
+		public void popupMenuCanceled(PopupMenuEvent event) {}
+		public void popupMenuWillBecomeInvisible(PopupMenuEvent event) {}
+		public void popupMenuWillBecomeVisible(PopupMenuEvent event) {}
+		};
 	JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	popupMenu.addPopupMenuListener(pListener);
 	// Edit
@@ -123,27 +117,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	setVisible(true);
     }
     
-    /*
-    class JPopupMenuShower extends MouseAdapter {
-	private JPopupMenu popup;
-	public JPopupMenuShower(JPopupMenu popup) {
-	    this.popup = popup;
-	}
-	private void showIfPopupTrigger(MouseEvent mouseEvent) {
-	    if (popup.isPopupTrigger(mouseEvent)) {
-		popup.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent
-			   .getY());
-	    }
-	}
-	public void mousePressed(MouseEvent mouseEvent) {
-	    showIfPopupTrigger(mouseEvent);
-	}
-	public void mouseReleased(MouseEvent mouseEvent) {
-	    showIfPopupTrigger(mouseEvent);
-	}
-    }       
-    */
-
     /***********************
      ***   CLASS  EDIT   ***
      ***********************/
@@ -261,22 +234,22 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    {
 		if(trait_origin != null)
 		    {
-			System.out.println("node edit");
+			new Edit(true, getNodeId(trait_origin));
 		    }
 		else
 		    {
-			System.out.println("trace edit");
+			new Edit(false, getTraceId(take_trace));
 		    }
 	    }
 	else if(choix.equals("Delete"))
 	    {
 		if(trait_origin != null)
 		    {
-			System.out.println("node suppr");
+			delete(trait_origin);
 		    }
 		else
 		    {
-			System.out.println("trace suppr");
+			delTrace(take_trace);
 		    }
 	    }
 	repaint();
@@ -615,7 +588,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	return null;
     }
-
+    
     /*
       return the number of the trace where the user has clicked
       call by: mouseClicked
@@ -680,6 +653,18 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	return -1;
     }
     
+    public int getTraceId(Trace t)
+    {
+	for(int i = 0; i < trace.size(); i++)
+	    {
+		if(trace.get(i) == t)
+		    {
+			return i;
+		    }
+	    }
+	return -1;	
+    }
+
     public int getNumNode(int x, int y)
     {
 	for(int i = 0; i < coord.size(); i++)
@@ -694,6 +679,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	return -1;
     }
+    
 
     public Node getNodeByName(String name)
     {
