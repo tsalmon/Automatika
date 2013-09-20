@@ -26,6 +26,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.BorderLayout; 
 import java.awt.Color;
 import java.awt.Font;
@@ -40,6 +44,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseAdapter;
 
 public class Automatika extends JFrame implements MouseListener, KeyListener
 {
@@ -51,12 +56,14 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     JPanel draw_surface = new JPanel();
     boolean edit = false;
     boolean suppr = false;
+    boolean menu = false;
     Node trait_origin = null;
     LinkedList<Trace> trace = new LinkedList<Trace>();
     LinkedList<Node> coord = new LinkedList<Node>();
     LinkedList<Action> actions = new LinkedList<Action>();
     int width = 789;
     int height = 456;
+    JPopupMenu popupMenu = new JPopupMenu();
     
     /*
       In this constructor deserve to choose wich mod we will use 
@@ -72,6 +79,34 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    this.mode = 3;
 	setSize(width, height);
 	this.setContentPane(draw_surface);
+	ActionListener aListener = new ActionListener() {
+		public void actionPerformed(ActionEvent event) {
+		    System.out.println("Selected: " + event.getActionCommand());
+		}
+	    };
+	PopupMenuListener pListener = new PopupMenuListener() {
+		public void popupMenuCanceled(PopupMenuEvent event) {
+		    System.out.println("cancel");
+		}
+		public void popupMenuWillBecomeInvisible(PopupMenuEvent event) {
+		    System.out.println("end");
+		}
+		public void popupMenuWillBecomeVisible(PopupMenuEvent event) {
+		    System.out.println("start");
+		}
+	    };
+	JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+	popupMenu.addPopupMenuListener(pListener);
+	// Edit
+	JMenuItem editItem = new JMenuItem("Edit");
+	editItem.addActionListener(aListener);
+	popupMenu.add(editItem);
+	// Suppr
+	JMenuItem supprItem = new JMenuItem("Delete");
+	supprItem.addActionListener(aListener);
+	popupMenu.add(supprItem);
+	// Separator : popupMenu.addSeparator();
+
 	this.addMouseListener(this);
 	this.addKeyListener(this);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -79,6 +114,25 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	setVisible(true);
     }
 
+    class JPopupMenuShower extends MouseAdapter {
+	private JPopupMenu popup;
+	public JPopupMenuShower(JPopupMenu popup) {
+	    this.popup = popup;
+	}
+	private void showIfPopupTrigger(MouseEvent mouseEvent) {
+	    if (popup.isPopupTrigger(mouseEvent)) {
+		popup.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent
+			   .getY());
+	    }
+	}
+	public void mousePressed(MouseEvent mouseEvent) {
+	    showIfPopupTrigger(mouseEvent);
+	}
+	public void mouseReleased(MouseEvent mouseEvent) {
+	    showIfPopupTrigger(mouseEvent);
+	}
+    }       
+    
     /***********************
      ***   CLASS  EDIT   ***
      ***********************/
@@ -788,6 +842,12 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    {
 		return;
 	    }	
+	if(menu)
+	    {
+		menu = false;
+		repaint();
+		return;
+	    }
 	if(suppr == true && trait_origin != null && clickG(e))
 	    {
 		System.out.println("toto");
@@ -827,6 +887,17 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		id_hist++;
 		coord.add(new Node(x, y, name));
 		actions.add(new Action(1, coord.get(coord.size() - 1), x, y, x, y));
+	    }
+	else if(clickD(e))
+	    {
+		Node get_Node = getNode(e.getX(), e.getY() - 25);
+		Trace get_Trace = null;
+		if(get_Node == null)
+		    get_Trace = getTrace(e.getX(), e.getY() - 25);
+		if(get_Trace == null && get_Node == null)
+		    return ;
+		popupMenu.show(e.getComponent(), e.getX(), e.getY());
+		menu = true;
 	    }
 	repaint();
 	if(id_hist < actions.size() - 1)
