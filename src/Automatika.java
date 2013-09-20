@@ -1,9 +1,10 @@
 /**
-   TODO:
-   --- OUT
-   1 : create txt
-   --- automaton
-   2: double trace
+ *  @author: Salmon Thomas
+ *  TODO: 
+ *  --- OUT
+ *   1 : create txt
+ *   --- automaton
+ *   2: double trace
 **/
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -59,6 +60,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     boolean suppr = false;
     boolean menu = false;
     Node trait_origin = null;
+    Trace take_trace = null; // take with popupmenu
     LinkedList<Trace> trace = new LinkedList<Trace>();
     LinkedList<Node> coord = new LinkedList<Node>();
     LinkedList<Action> actions = new LinkedList<Action>();
@@ -83,13 +85,10 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	this.setContentPane(draw_surface);
 	ActionListener aListener = new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
-		    System.out.println("Selected: " + event.getActionCommand());
+		    choix_menu(event.getActionCommand());
 		}
 	    };
 	PopupMenuListener pListener = new PopupMenuListener(){
-		class Test()
-		{
-		}
 		public void popupMenuCanceled(PopupMenuEvent event) {
 		    System.out.println("cancel");
 		}
@@ -112,9 +111,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	popupMenu.add(supprItem);
 	// Separator : popupMenu.addSeparator();
 	
-	//--------------
-	submenu.add(new JMenuItem("a1"));
-	popupMenu.add(submenu);
+	//-------------------------------
+	//submenu.add(new JMenuItem("a1"));
+	popupMenu.add(submenu);          
 	//--------------
 	
 	this.addMouseListener(this);
@@ -123,7 +122,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	setLocationRelativeTo(null);
 	setVisible(true);
     }
-
+    
+    /*
     class JPopupMenuShower extends MouseAdapter {
 	private JPopupMenu popup;
 	public JPopupMenuShower(JPopupMenu popup) {
@@ -142,7 +142,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    showIfPopupTrigger(mouseEvent);
 	}
     }       
-    
+    */
+
     /***********************
      ***   CLASS  EDIT   ***
      ***********************/
@@ -254,6 +255,32 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     
     /** end class edit**/
 
+    public void choix_menu(String choix)
+    {
+	if(choix.equals("Edit"))
+	    {
+		if(trait_origin != null)
+		    {
+			System.out.println("node edit");
+		    }
+		else
+		    {
+			System.out.println("trace edit");
+		    }
+	    }
+	else if(choix.equals("Delete"))
+	    {
+		if(trait_origin != null)
+		    {
+			System.out.println("node suppr");
+		    }
+		else
+		    {
+			System.out.println("trace suppr");
+		    }
+	    }
+	repaint();
+    }
     
     // to do it again, jpg
     public void Save()
@@ -375,7 +402,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			    trace.add(new Trace(getNodeByName(str_split[0]), getNodeByName(str_split[2])));
 			    trace.get(trace.size() - 1).setName(str_split[3].substring(1, str_split[3].length() - 1));
 			    //System.out.println("N1: " + str_split[0] + ", N2: " + str_split[2] + " str: " + str_split[3].substring(1, str_split[3].length() - 1));			    
-			}
+		}
 		    repaint();
 		}
 		catch (Exception x) {
@@ -855,6 +882,8 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(menu)
 	    {
 		menu = false;
+		trait_origin = null;
+		take_trace = null;
 		repaint();
 		return;
 	    }
@@ -899,12 +928,12 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	else if(clickD(e))
 	    {
-		Node get_Node = getNode(e.getX(), e.getY() - 25);
-		Trace get_Trace = null;
-		if(get_Node == null)
-		    get_Trace = getTrace(e.getX(), e.getY() - 25);
-		if(get_Trace == null && get_Node == null)
-		    return ;
+		trait_origin = getNode(e.getX(), e.getY() - 25);
+		//take_trace = getTrace(e.getX(), e.getY() - 25);
+		if(trait_origin == null)
+		    take_trace = getTrace(e.getX(), e.getY() - 25);
+		if(trait_origin == null && take_trace == null)
+		    return;
 		popupMenu.show(e.getComponent(), e.getX(), e.getY());
 		menu = true;
 	    }
