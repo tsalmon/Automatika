@@ -103,7 +103,20 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	JMenuItem supprItem = new JMenuItem("Delete");
 	supprItem.addActionListener(aListener);
 	popupMenu.add(supprItem);
-	// Separator : popupMenu.addSeparator();
+
+	popupMenu.addSeparator();
+
+	// Add
+	JMenuItem addItem = new JMenuItem("Add");
+	addItem.addActionListener(aListener);
+	popupMenu.add(addItem);
+	// Clear
+	JMenuItem clearItem = new JMenuItem("Clear");
+	clearItem.addActionListener(aListener);
+	popupMenu.add(clearItem);
+
+
+	// Separator : 
 	
 	//-------------------------------
 	//submenu.add(new JMenuItem("a1"));
@@ -252,6 +265,19 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 			delTrace(take_trace);
 		    }
 	    }
+	else if(choix.equals("Add trace"))
+	    {
+		
+	    }
+	else if(choix.equals("Clear"))
+	    {
+		popupMenu.removeAll();
+	    }
+	else // nodes of trace
+	    {
+		
+	    }
+	    
 	repaint();
     }
     
