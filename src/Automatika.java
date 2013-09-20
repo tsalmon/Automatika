@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.BorderLayout; 
@@ -64,6 +65,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     int width = 789;
     int height = 456;
     JPopupMenu popupMenu = new JPopupMenu();
+    JMenu submenu = new JMenu("submenu");
     
     /*
       In this constructor deserve to choose wich mod we will use 
@@ -106,6 +108,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	supprItem.addActionListener(aListener);
 	popupMenu.add(supprItem);
 	// Separator : popupMenu.addSeparator();
+	
+	//--------------
+	submenu.add(new JMenuItem("a1"));
+	popupMenu.add(submenu);
+	//--------------
 
 	this.addMouseListener(this);
 	this.addKeyListener(this);
@@ -850,7 +857,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }
 	if(suppr == true && trait_origin != null && clickG(e))
 	    {
-		System.out.println("toto");
 		Node to_del = getNode(e.getX(), e.getY() - 25);
 		actions.add(new Action(2, to_del));	
 		delete(to_del);
