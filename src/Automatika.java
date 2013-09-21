@@ -1,11 +1,11 @@
 /**
  *  @author: Salmon Thomas
  *  TODO: 
- *  --- OUT
- *   1 : create txt
- *   --- automaton
+ *  --- diver
+ *   1: clic sur croix: voulez vous sauvegarder ?
+ *  --- automaton
  *   2: double trace
-**/
+ */
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.HashSet;
@@ -67,8 +67,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     LinkedList<JMenuItem> line = new LinkedList<JMenuItem>();
     int width = 789;
     int height = 456;
-    JPopupMenu popupMenu_node = new JPopupMenu();
-    JPopupMenu popupMenu_trace = new JPopupMenu();
+    JPopupMenu popupMenu = new JPopupMenu();
     JMenu submenu_node = new JMenu("submenu");
 
     ActionListener aListener = new ActionListener() {
@@ -82,11 +81,11 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    public void popupMenuWillBecomeInvisible(PopupMenuEvent event) {}
 	    public void popupMenuWillBecomeVisible(PopupMenuEvent event) {}
 	};
-    
+     
     /***********************
      ***       INIT      ***
      ***********************/
-    
+        
     /*
       In this constructor deserve to choose wich mod we will use 
       At this moment, we have just the mod no oriented graph
@@ -103,9 +102,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	this.setContentPane(draw_surface);
 
 	JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-	init_popup_menu(popupMenu_node);
-	init_popup_menu(popupMenu_trace);
-	init_popup_menu_node();
 	
 	this.addMouseListener(this);
 	this.addKeyListener(this);
@@ -114,10 +110,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	setVisible(true);
     }
     
-    public void init_popup_menu(JPopupMenu popupMenu)
+    public void init_popup_menu()
     {
 	popupMenu.addPopupMenuListener(pListener);
-
 	// Edit
 	JMenuItem editItem = new JMenuItem("Edit");
 	editItem.addActionListener(aListener);
@@ -127,25 +122,28 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	supprItem.addActionListener(aListener);
 	popupMenu.add(supprItem);	
     }
-
+    
+    
     public void init_popup_menu_node()
     {
-	popupMenu_node.addSeparator();	
+	init_popup_menu();
+	popupMenu.addSeparator();	
 	// Add
 	JMenuItem addItem = new JMenuItem("Add");
 	addItem.addActionListener(aListener);
-	popupMenu_node.add(addItem);
+	popupMenu.add(addItem);
 
 	//-------------------------------
 	//submenu.add(new JMenuItem("a1"));
-	popupMenu_node.add(submenu_node);
+	popupMenu.add(submenu_node);
 	//--------------
 	
 	// Clear
 	JMenuItem clearItem = new JMenuItem("Clear");
 	clearItem.addActionListener(aListener);
-	popupMenu_node.add(clearItem);	
+	popupMenu.add(clearItem);	
     }
+    
     
     /***********************
      ***   CLASS  EDIT   ***
@@ -911,6 +909,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	    }	
 	if(menu)
 	    {
+		popupMenu.removeAll();
 		menu = false;
 		trait_origin = null;
 		take_trace = null;
@@ -959,17 +958,15 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	else if(clickD(e))
 	    {
 		trait_origin = getNode(e.getX(), e.getY() - 25);
-		//take_trace = getTrace(e.getX(), e.getY() - 25);
 		if(trait_origin == null)
 		    take_trace = getTrace(e.getX(), e.getY() - 25);
 		else
-		    popupMenu_node.show(e.getComponent(), e.getX(), e.getY());		   
-		
+		    init_popup_menu_node();
 		if(trait_origin == null && take_trace == null)
 		    return;
 		else
-		    popupMenu_trace.show(e.getComponent(), e.getX(), e.getY());		
-
+		    init_popup_menu();
+		popupMenu.show(e.getComponent(), e.getX(), e.getY());			
 		menu = true;
 	    }
 	repaint();
