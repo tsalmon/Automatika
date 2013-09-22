@@ -962,9 +962,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 		    take_trace = getTrace(e.getX(), e.getY() - 25);
 		else
 		    init_popup_menu_node();
-		if(trait_origin == null && take_trace == null)
+		if(trait_origin == null &&  take_trace == null)
 		    return;
-		else
+		else if(take_trace != null)
 		    init_popup_menu();
 		popupMenu.show(e.getComponent(), e.getX(), e.getY());			
 		menu = true;
