@@ -48,8 +48,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
 
-public class Automatika extends JFrame implements MouseListener, KeyListener
-{
+public class Automatika extends JFrame implements MouseListener, KeyListener{
     int mode = 0; // 1 = no orient, 2 = orient, 3 = list
     int indice = 0;
     int id_hist = -1;
@@ -90,8 +89,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
       In this constructor deserve to choose wich mod we will use 
       At this moment, we have just the mod no oriented graph
      */
-    Automatika(int mode)
-    {
+    Automatika(int mode){
 	if(mode == 1) // graphe non oriente
 	    this.mode = 1;
 	else if(mode == 2) // graphe oriente
@@ -122,7 +120,6 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	supprItem.addActionListener(aListener);
 	popupMenu.add(supprItem);	
     }
-    
     
     public void init_popup_menu_node()
     {
@@ -297,7 +294,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	repaint();
     }
     
-    // to do it again, jpg
+    //jpg
     public void Save()
     {
 	BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -440,100 +437,89 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     }
 
     //actualize the panel after moved a node
-    public void repaint()
-    {
+    public void repaint(){
+	System.out.println("repaint");
 	Graphics g = draw_surface.getGraphics();
 	g.setColor(draw_surface.getBackground());
-	g.fillRect(0, 0, 789, 456);
+	g.fillRect(0, 0, 789, 456); // RAZ
  	g.setColor(Color.black);
-	for(int i = 0; i < trace.size(); i++)
-	    {
-		if(trace.get(i).isLoop())
-		    {
-			g.drawOval(trace.get(i).getX1()-50, trace.get(i).getY1()-50, 50, 50);
-			g.drawString(trace.get(i).name, trace.get(i).getX1()-40-(int)(trace.get(i).name.length()*2.8), trace.get(i).getY1()-50);
-		    }
-		else
-		    {
-			int x1 = trace.get(i).getX1(),
-			    y1 = trace.get(i).getY1(),
-			    x2 = trace.get(i).getX2(),
-			    y2 = trace.get(i).getY2();
-			if(dist(x1, y1, x2, y2) > 80)
-			    g.drawString(trace.get(i).name, (x1+x2)/2, (y1+y2)/2);
-			draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
-		    }
+	for(int i = 0; i < trace.size(); i++){
+	    if(trace.get(i).isLoop()){
+		g.drawOval(trace.get(i).getX1()-50, trace.get(i).getY1()-50, 50, 50);
+		g.drawString(trace.get(i).name, trace.get(i).getX1()-40-(int)(trace.get(i).name.length()*2.8), trace.get(i).getY1()-50);
 	    }
-	for(int i = 0; i < coord.size(); i++)
-	    {
-		g.setColor(draw_surface.getBackground());
-		g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 50, 50);
-		g.setColor(Color.black);
-		g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
-		if(coord.get(i).isEnd())
-		    {
-			g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
-		    }
-		if(coord.get(i).isStart())
-		    {
-			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
-			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
-			g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
-		    }
-		g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
+	    else{
+		int x1 = trace.get(i).getX1(),
+		    y1 = trace.get(i).getY1(),
+		    x2 = trace.get(i).getX2(),
+		    y2 = trace.get(i).getY2();
+		if(dist(x1, y1, x2, y2) > 80)
+		    g.drawString(trace.get(i).name, (x1+x2)/2, (y1+y2)/2);
+		draw_surface.getGraphics().drawLine(x1, y1, x2, y2);
 	    }
-	//System.out.println("repaint");		
+	}
+	for(int i = 0; i < coord.size(); i++){
+	    g.setColor(draw_surface.getBackground());
+	    g.fillOval(coord.get(i).x-26, coord.get(i).y-26, 50, 50);
+	    g.setColor(Color.black);
+	    g.drawOval(coord.get(i).x-25, coord.get(i).y-25, 50, 50);
+	    if(coord.get(i).isEnd()){
+		g.drawOval(coord.get(i).x-20, coord.get(i).y-20, 40, 40);			
+	    }
+	    if(coord.get(i).isStart()){
+		//g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 100, coord.get(i).y);
+		g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y + 15);
+		g.drawLine(coord.get(i).x - 25, coord.get(i).y, coord.get(i).x - 50, coord.get(i).y - 15);
+	    }
+	    g.drawString(coord.get(i).name, coord.get(i).x-5, coord.get(i).y+5);			
+	}
     }
 
-    public void ctrl_z()
-    {	
-	if(id_hist >= 0 )
-	    {
-		Action a = actions.get(id_hist);
-		switch(actions.get(id_hist).getNum())
-		    {
-		    case 1:
-			delete(actions.get(id_hist).getNode());
-			break;
-		    case 2:
-			coord.add(actions.get(id_hist).getNode());
-			trait_origin = a.getNode();
-			Iterator<Node> it_node = a.getNode().transitions.iterator();
-			Node s = null;
-			while(it_node.hasNext())
-			    {
-				s = it_node.next();
-				addTrace(s);
-			    }			
-			break;
-		    case 3:
-			delTrace(actions.get(id_hist).getTrace());
-			break;
-		    case 4:
-			Trace t = actions.get(id_hist).getTrace(); 
-			trait_origin = t.getN1();
-			addTrace(t.getN2());
-			t.getN1().add_transition(t.getN2());
-			t.getN2().add_transition(t.getN1());
-			break;
-		    case 5:
-			a.getNode().setStart(a.getOldStart());
-			a.getNode().setEnd(a.getOldEnd());
-			a.getNode().setName(a.getOldName());
-			break;
-		    case 6:
-			actions.get(id_hist).getTrace().setName(actions.get(id_hist).getOldName());
-			break;
-		    case 7:
-			trait_origin = a.getNode();
-			Move(a.getOldX(), a.getOldY());
-			repaint();
-			break;
-		    default:
-			//System.out.println("error");
-		    }
-		id_hist--;
+    public void ctrl_z(){
+	if(id_hist >= 0 ){
+	    Action a = actions.get(id_hist);
+	    switch(actions.get(id_hist).getNum()){
+	    case 1:
+		delete(actions.get(id_hist).getNode());
+		break;
+	    case 2:
+		coord.add(actions.get(id_hist).getNode());
+		trait_origin = a.getNode();
+		Iterator<Node> it_node = a.getNode().transitions.iterator();
+		Node s = null;
+		while(it_node.hasNext()){
+		    s = it_node.next();
+		    addTrace(s);
+		}
+		break;
+	    case 3:
+		delTrace(actions.get(id_hist).getTrace());
+		break;
+	    case 4:
+		Trace t = actions.get(id_hist).getTrace(); 
+		trait_origin = t.getN1();
+		addTrace(t.getN2());
+		t.getN1().add_transition(t.getN2());
+		t.getN2().add_transition(t.getN1());
+		break;
+	    case 5:
+		a.getNode().setStart(a.getOldStart());
+		a.getNode().setEnd(a.getOldEnd());
+		a.getNode().setName(a.getOldName());
+		break;
+	    case 6:
+		actions.get(id_hist).getTrace().setName(actions.get(id_hist).getOldName());
+		break;
+	    case 7:
+		trait_origin = a.getNode();
+		Move(a.getOldX(), a.getOldY());
+		repaint();
+		break;
+	    default:
+		//System.out.println("error");
 	    }
+	    id_hist--;
+	}
     }
     
     public void ctrl_y()
@@ -766,6 +752,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
     // TODO: split
     public void newTrait(Node n)
     {
+	System.out.println("newTrait");
 	if(n == null){ return;} // if node not found
 	int x_1 = trait_origin.x, y_1 = trait_origin.y, x_2 = n.x, y_2 = n.y;
 	trait_origin.add_transition(n);
@@ -822,6 +809,7 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 
     public void addTrace(Node n)
     {
+	System.out.println("addTrace");
 	boolean exist = false;
 	int x1, x2, y1, y2;
 	for(int k = 0; k < trace.size(); k++)
@@ -838,10 +826,9 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	}
     }
 
-
     /*
       to move a node
-     */
+    */
     public void Move(int x, int y)
     {
 	Iterator<Node> it = trait_origin.transitions.iterator();
@@ -873,31 +860,27 @@ public class Automatika extends JFrame implements MouseListener, KeyListener
 	if(e.getKeyCode() == KeyEvent.VK_DELETE){suppr=true;}
     }
 
-    public boolean clickG(MouseEvent e)
-    {
+    public boolean clickG(MouseEvent e){
 	return (SwingUtilities.isLeftMouseButton(e));
     }
-
-    public boolean clickD(MouseEvent e)
-    {
+    
+    public boolean clickD(MouseEvent e){
 	return (SwingUtilities.isRightMouseButton(e));
     }
     
-    public void mouseClicked(MouseEvent e)
-    {
-	if(e.getClickCount() == 2 && edit == true && clickG(e))
-	    {
-		int num_trace = getNumTrace(e.getX(), e.getY() - 25);
-	        int num_node  = getNumNode(e.getX(), e.getY() - 25);
-		if(num_trace != -1)
-		    if(num_node != -1)
-			new Edit(true, num_node);
-		    else
-			new Edit(false, num_trace);
+    public void mouseClicked(MouseEvent e){
+	if(e.getClickCount() == 2 && edit == true && clickG(e)){
+	    int num_trace = getNumTrace(e.getX(), e.getY() - 25);
+	    int num_node  = getNumNode(e.getX(), e.getY() - 25);
+	    if(num_trace != -1)
+		if(num_node != -1)
+		    new Edit(true, num_node);
 		else
-		    if(num_node != -1)
-			new Edit(true, num_node);
-	    }
+		    new Edit(false, num_trace);
+	    else
+		if(num_node != -1)
+		    new Edit(true, num_node);
+	}
     }
     
     public void mouseReleased(MouseEvent e)

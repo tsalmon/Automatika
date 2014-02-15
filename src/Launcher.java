@@ -53,7 +53,7 @@ public class Launcher extends JFrame implements ActionListener
     
    public static void main(String [] args)
     {
-	new Automatika(1);
+	new Automatika(2);
 	/*
 	if(args.length == 1)
 	    {
