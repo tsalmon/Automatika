@@ -3,7 +3,9 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+/*
+	Main class
+*/
 public class Launcher extends JFrame implements ActionListener
 {
     static JFrame f = null;
@@ -53,7 +55,7 @@ public class Launcher extends JFrame implements ActionListener
     
    public static void main(String [] args)
     {
-	new Automatika(2);
+		new Automatika(2);
 	/*
 	if(args.length == 1)
 	    {
