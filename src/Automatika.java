@@ -474,20 +474,28 @@ Only active if we have found an object
 					int de = (int)(25 * bc / ab);
 					int ae = (int)(25 * ac / ab);
 
+					/*
+					 * Dx = x2 (-/+) ae
+					 * Dy = y2 (-/+) de
+					 */
+					
 					System.out.println(trace.get(i));
 					if(x1 < x2){
 						if(y1 > y2){ // bottom - left
-							//System.out.println("bl:" +  + " " + (y1 - ae));
-							draw_surface.getGraphics().drawLine((x2 - de), 0, (x2 - de), 700); // draw trace between nodes
-							draw_surface.getGraphics().drawLine(0, (y2 - ae), 400, (y2 - ae)); // draw trace between nodes
+							System.out.println("bl:");
+							draw_surface.getGraphics().drawLine((x2 - ae), 0, (x2 - ae), 456); // draw trace between nodes
+							draw_surface.getGraphics().drawLine(0, (y2 + de), 789, (y2 + de)); // draw trace between nodes
 						} else { // bottom - right
-							System.out.println("br " );							
+							draw_surface.getGraphics().drawLine((x2 - ae), 0, (x2 - ae), 456); // draw trace between nodes
+							draw_surface.getGraphics().drawLine(0, (y2 - de), 789, (y2 - de)); // draw trace between nodes
 						}
 					} else {
 						if(y1 > y2){ // top - left
-							System.out.println("tl " );
+							draw_surface.getGraphics().drawLine((x2 + ae), 0, (x2 + ae), 456); // draw trace between nodes
+							draw_surface.getGraphics().drawLine(0, (y2 + de), 789, (y2 + de)); // draw trace between nodes
 						} else { // top - right
-							System.out.println("tr " );							
+							draw_surface.getGraphics().drawLine((x2 + ae), 0, (x2 + ae), 700); // draw trace between nodes
+							draw_surface.getGraphics().drawLine(0, (y2 - de), 400, (y2 - de)); // draw trace between nodes
 						}
 					}
 				}
